@@ -21,7 +21,9 @@ Tidak perlu instalasi atau build.
 - **Lokal:** buka `index.html` langsung di browser. Di laptop, tampilan muncul dalam bingkai ponsel; di HP, tampilan memenuhi layar.
 - **Online (GitHub Pages):** di repo ini buka **Settings → Pages**, pada *Build and deployment* pilih **Source: GitHub Actions**. Setiap push ke `main` akan otomatis dideploy oleh `.github/workflows/pages.yml`.
 
-Layar tertentu bisa dibuka langsung lewat hash URL: `#wl`, `#wl-onb`, `#wl-trip`, `#wl-qr`, `#wl-hist`, `#wl-rate`, `#hr`.
+Layar tertentu bisa dibuka langsung lewat hash URL: `#wl`, `#wl-onb`, `#wl-trip`, `#wl-qr`, `#wl-hist`, `#wl-rate`, `#hr`. Untuk tangkapan layar ada state demo: `#wl-onb2` (atur rute), `#wl-trip-live` (shuttle siap), `#wl-trip-delay` (KRL terlambat).
+
+Panel prototipe (flowchart alur dan 10 tangkapan layar fitur) ada di `docs/panel/`.
 
 ## Alur yang bisa dicoba
 

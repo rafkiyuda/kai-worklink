@@ -32,7 +32,16 @@ if (_h) {
   document.body.insertAdjacentHTML('beforeend', '<style>.screen.on{animation:none}</style>');
   activated = true;
   if (_h === 'hr') wlMode = 'hr';
-  go(_h);
+  // Demo states for screenshots: #wl-onb2, #wl-onb3, #wl-trip-live, #wl-trip-delay
+  const demo = {
+    'wl-onb2': () => { go('wl-onb'); onbGo(2); },
+    'wl-onb3': () => { go('wl-onb'); onbGo(3); },
+    'wl-trip-live': () => { go('wl-trip'); simStep(); simStep(); },
+    'wl-trip-delay': () => { go('wl-trip'); simStep(); simDelay(); },
+  };
+  if (demo[_h]) demo[_h]();
+  else go(_h);
+  document.getElementById('toast').classList.remove('on');
 }
 
 /* bind config values into the page */
