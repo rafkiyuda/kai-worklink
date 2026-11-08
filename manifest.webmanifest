@@ -1,0 +1,10 @@
+{
+  "name": "KAI WorkLink Prototype",
+  "short_name": "WorkLink",
+  "description": "Prototipe konsep KAI WorkLink di dalam Access by KAI (BPC ITB Insight 2026, Team LDR).",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#F5F5FA",
+  "theme_color": "#2D2A70",
+  "icons": [{ "src": "assets/img/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

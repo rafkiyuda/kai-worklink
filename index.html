@@ -1,758 +1,1156 @@
 <!doctype html>
 <html lang="id">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Prototipe WorkLink di Access by KAI</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --navy:#2D2A70;--navy-d:#1E1C4D;--navy-l:#E8E7F3;--navy-m:#4A45A0;
-  --orange:#ED6B23;--orange-l:#FDEBDF;--red:#D62839;--red-l:#FBE3E6;
-  --green:#1E8E4E;--green-l:#E3F4EA;--text:#1F1F2E;--text2:#6B6B80;--line:#E4E4EE;--bg:#F5F5FA;--white:#fff;
-  --r:16px;
-}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%}
-body{font-family:'Poppins',system-ui,sans-serif;background:#DCDCE8;color:var(--text);display:flex;justify-content:center;align-items:flex-start;min-height:100vh}
-.stage{padding:24px 16px;display:flex;gap:28px;align-items:flex-start;justify-content:center;flex-wrap:wrap}
-.side{max-width:300px;color:var(--navy-d);padding-top:40px}
-.side h1{font-size:22px;line-height:1.25;font-weight:700}
-.side h1 span{color:var(--orange)}
-.side p{font-size:13px;color:var(--text2);margin-top:10px;line-height:1.6}
-.side ol{margin:14px 0 0 18px;font-size:13px;line-height:1.8;color:var(--text)}
-.side .tag{display:inline-block;margin-top:14px;font-size:11px;font-weight:600;background:var(--orange-l);color:#8A3A0C;border:1px solid #F7C3A1;border-radius:999px;padding:4px 10px}
-.phone{width:390px;height:844px;background:var(--bg);border-radius:44px;border:10px solid #15142F;position:relative;overflow:hidden;box-shadow:0 30px 60px rgba(30,28,77,.25)}
-@media (max-width:480px){
-  body{background:var(--bg)}
-  .stage{padding:0}
-  .side{display:none}
-  .phone{width:100vw;height:100dvh;border:0;border-radius:0;box-shadow:none}
-}
-.status{height:44px;display:flex;justify-content:space-between;align-items:center;padding:0 26px;font-size:13px;font-weight:600;color:#fff;background:var(--navy);position:relative;z-index:5}
-.status .ic{display:flex;gap:6px;align-items:center}
-.status .ic i{display:inline-block;width:16px;height:9px;border:1.5px solid #fff;border-radius:2px;position:relative}
-.status .ic i:after{content:"";position:absolute;inset:1.5px;right:4px;background:#fff;border-radius:1px}
-.proto{position:absolute;top:44px;left:0;right:0;z-index:6;background:var(--orange);color:#fff;font-size:10.5px;font-weight:600;text-align:center;padding:3px 8px;letter-spacing:.02em}
-.screens{position:absolute;top:62px;bottom:72px;left:0;right:0;overflow:hidden}
-.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;display:none;scrollbar-width:none;padding-bottom:24px}
-.screen::-webkit-scrollbar{display:none}
-.screen.on{display:block;animation:fade .22s ease}
-@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-/* nav */
-.nav{position:absolute;bottom:0;left:0;right:0;height:72px;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:center;padding-bottom:6px;z-index:5}
-.nav button{background:none;border:0;font:inherit;font-size:10.5px;color:var(--text2);display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;width:64px}
-.nav button svg{width:22px;height:22px}
-.nav button.on{color:var(--navy);font-weight:600}
-.nav .mid{position:relative;top:-14px}
-.nav .mid .bubble{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--orange),#F28A4C);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 14px rgba(237,107,35,.4);color:#fff}
-.nav .mid.on{color:var(--orange)}
-/* header */
-.hero{background:var(--navy);color:#fff;padding:14px 18px 64px;position:relative;overflow:hidden}
-.hero:before{content:"";position:absolute;right:-60px;top:-40px;width:220px;height:220px;border-radius:50%;background:var(--navy-m);opacity:.45}
-.hero:after{content:"";position:absolute;left:-40px;bottom:-110px;width:260px;height:160px;border-radius:50%;border:10px solid var(--orange);opacity:.35}
-.brand{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
-.brand .wm{font-size:20px;font-weight:700;letter-spacing:-.5px}
-.brand .wm b{color:var(--orange)}
-.brand .wm small{font-size:10px;font-weight:500;opacity:.8;margin-left:4px}
-.iconbtn{width:36px;height:36px;border-radius:12px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;border:0;color:#fff;cursor:pointer;position:relative}
-.iconbtn .dot{position:absolute;top:7px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--orange);border:2px solid var(--navy)}
-.hello{position:relative;z-index:1;margin-top:14px}
-.hello p{font-size:12px;opacity:.8}
-.hello h2{font-size:19px;font-weight:600}
-.cardfloat{margin:-48px 16px 0;position:relative;z-index:2;background:#fff;border-radius:18px;padding:14px;box-shadow:0 8px 24px rgba(30,28,77,.1);display:flex;gap:12px;align-items:center}
-.pts{flex:1;display:flex;gap:10px;align-items:center}
-.pts .coin{width:38px;height:38px;border-radius:12px;background:var(--orange-l);display:flex;align-items:center;justify-content:center;color:var(--orange);font-weight:700}
-.pts small{display:block;font-size:10.5px;color:var(--text2)}
-.pts b{font-size:15px;color:var(--navy-d)}
-.vsep{width:1px;height:34px;background:var(--line)}
-.member{font-size:10.5px;color:var(--text2)}
-.member b{display:block;font-size:13px;color:var(--navy)}
-.sec{padding:18px 16px 0}
-.sec h3{font-size:15px;font-weight:600;color:var(--navy-d);display:flex;justify-content:space-between;align-items:center}
-.sec h3 a{font-size:11.5px;color:var(--orange);font-weight:600;text-decoration:none;cursor:pointer}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 6px;margin-top:12px}
-.mi{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:10.5px;text-align:center;color:var(--text);cursor:pointer;background:none;border:0;font-family:inherit;line-height:1.25}
-.mi .ico{width:50px;height:50px;border-radius:16px;background:var(--navy-l);display:flex;align-items:center;justify-content:center;color:var(--navy);position:relative}
-.mi .ico svg{width:24px;height:24px}
-.mi.wl .ico{background:linear-gradient(135deg,var(--orange),#F59A63);color:#fff}
-.mi .new{position:absolute;top:-6px;right:-10px;background:var(--red);color:#fff;font-size:8.5px;font-weight:700;padding:2px 6px;border-radius:999px;border:2px solid #fff}
-.banner{margin:16px 16px 0;border-radius:18px;background:linear-gradient(120deg,var(--navy) 0%,#5A2C6B 55%,var(--orange) 100%);color:#fff;padding:16px;display:flex;gap:12px;align-items:center;cursor:pointer;position:relative;overflow:hidden}
-.banner h4{font-size:15px;line-height:1.3}
-.banner p{font-size:11.5px;opacity:.9;margin-top:4px}
-.banner .cta{margin-top:10px;display:inline-block;background:#fff;color:var(--navy);font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:999px}
-.banner svg{flex:none}
-.card{background:#fff;border-radius:var(--r);padding:14px;border:1px solid var(--line)}
-.mt{margin-top:12px}
-.ticket{display:flex;gap:12px;align-items:center}
-.ticket .tl{flex:1}
-.ticket small{font-size:10.5px;color:var(--text2)}
-.ticket .route{font-size:14px;font-weight:600;color:var(--navy-d);display:flex;align-items:center;gap:6px}
-.chip{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:999px}
-.chip.g{background:var(--green-l);color:var(--green)}
-.chip.o{background:var(--orange-l);color:#B04A10}
-.chip.n{background:var(--navy-l);color:var(--navy)}
-.chip.r{background:var(--red-l);color:var(--red)}
-.hscroll{display:flex;gap:10px;overflow-x:auto;margin:12px -16px 0;padding:0 16px 4px;scrollbar-width:none}
-.hscroll::-webkit-scrollbar{display:none}
-.promo{min-width:230px;border-radius:16px;padding:14px;color:#fff;font-size:12px}
-.promo b{display:block;font-size:14px;margin-bottom:4px}
-/* generic page header */
-.ph{background:var(--navy);color:#fff;padding:12px 16px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:3}
-.ph button{background:rgba(255,255,255,.14);border:0;color:#fff;width:34px;height:34px;border-radius:11px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.ph h2{font-size:16px;font-weight:600;flex:1}
-.ph .sub{font-size:11px;opacity:.8;font-weight:400}
-.btn{display:block;width:100%;border:0;border-radius:14px;padding:13px;font:inherit;font-weight:600;font-size:14px;cursor:pointer;text-align:center}
-.btn.p{background:var(--orange);color:#fff}
-.btn.s{background:var(--navy-l);color:var(--navy)}
-.btn.n{background:var(--navy);color:#fff}
-.btn:disabled{opacity:.45;cursor:not-allowed}
-label.f{display:block;font-size:11.5px;color:var(--text2);margin:12px 0 6px;font-weight:500}
-.inp{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:11px 12px;font:inherit;font-size:14px;background:#fff;color:var(--text)}
-.inp:focus{outline:none;border-color:var(--navy)}
-.err{font-size:11.5px;color:var(--red);margin-top:6px;display:none}
-.steps{display:flex;gap:6px;margin:4px 0 14px}
-.steps i{flex:1;height:4px;border-radius:4px;background:var(--line)}
-.steps i.on{background:var(--orange)}
-.opt{display:flex;gap:10px;align-items:center;border:1.5px solid var(--line);border-radius:14px;padding:12px;margin-top:8px;cursor:pointer;background:#fff}
-.opt.on{border-color:var(--orange);background:var(--orange-l)}
-.opt .rad{width:18px;height:18px;border-radius:50%;border:2px solid var(--text2);flex:none}
-.opt.on .rad{border-color:var(--orange);box-shadow:inset 0 0 0 4px #fff;background:var(--orange)}
-.opt b{font-size:13px;color:var(--navy-d)}
-.opt small{display:block;font-size:11px;color:var(--text2)}
-.check{display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--text);margin-top:14px;line-height:1.5;cursor:pointer}
-.check input{margin-top:3px;accent-color:var(--orange);width:16px;height:16px}
-/* worklink home */
-.wlhero{background:linear-gradient(160deg,var(--navy) 0%,var(--navy-d) 100%);color:#fff;padding:14px 16px 70px;position:relative;overflow:hidden}
-.wlhero:after{content:"";position:absolute;right:-40px;bottom:-70px;width:200px;height:200px;border-radius:50%;border:14px solid var(--orange);opacity:.25}
-.wlhero .top{display:flex;justify-content:space-between;align-items:center}
-.wlhero .logo{font-size:18px;font-weight:700}
-.wlhero .logo b{color:var(--orange)}
-.wlhero .comp{font-size:11.5px;opacity:.85;margin-top:2px}
-.toggle{display:flex;background:rgba(255,255,255,.14);border-radius:999px;padding:3px}
-.toggle button{white-space:nowrap;border:0;background:none;color:#fff;font:inherit;font-size:10.5px;font-weight:600;padding:5px 9px;border-radius:999px;cursor:pointer;opacity:.75}
-.toggle button.on{background:#fff;color:var(--navy);opacity:1}
-.peak{position:relative;z-index:1;margin-top:16px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:12px}
-.peak .row{display:flex;justify-content:space-between;align-items:center}
-.peak .lbl{font-size:11px;opacity:.8}
-.peak .big{font-size:22px;font-weight:700}
-.peak .big small{font-size:12px;font-weight:500;opacity:.8}
-.bar{height:8px;border-radius:8px;background:rgba(255,255,255,.18);margin-top:10px;position:relative;overflow:hidden;display:flex}
-.bar span{height:100%}
-.legend{display:flex;justify-content:space-between;font-size:9.5px;opacity:.75;margin-top:5px}
-.float2{margin:-54px 16px 0;position:relative;z-index:2}
-.pkg{display:flex;justify-content:space-between;align-items:center}
-.pkg .nm{font-size:11px;color:var(--text2)}
-.pkg .nm b{display:block;font-size:16px;color:var(--navy-d)}
-.prices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-.price{border-radius:12px;padding:10px;background:var(--bg)}
-.price small{font-size:10.5px;color:var(--text2);display:block}
-.price b{font-size:14px;color:var(--navy-d)}
-.price.flex{background:var(--orange-l)}
-.price.flex b{color:#B04A10}
-.trip{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);align-items:center;cursor:pointer}
-.trip:last-child{border-bottom:0}
-.trip .t{width:56px;text-align:center}
-.trip .t b{font-size:15px;color:var(--navy-d);display:block}
-.trip .t small{font-size:10px;color:var(--text2)}
-.trip .mid{flex:1;font-size:11.5px;color:var(--text2)}
-.trip .mid b{color:var(--text);font-size:12.5px;display:block}
-.trip .pr{text-align:right;font-size:11px}
-.trip .pr b{display:block;font-size:13px;color:var(--navy-d)}
-.qa{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
-.qa button{background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 4px;font:inherit;font-size:10.5px;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}
-.qa button svg{width:22px;height:22px;color:var(--navy)}
-/* journey */
-.tl{position:relative;margin-top:8px}
-.tl .it{display:flex;gap:12px;position:relative;padding-bottom:18px}
-.tl .it:before{content:"";position:absolute;left:15px;top:32px;bottom:0;width:2px;background:var(--line)}
-.tl .it:last-child:before{display:none}
-.tl .it.done:before{background:var(--orange)}
-.tl .nd{width:32px;height:32px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;background:var(--line);color:var(--text2);font-size:13px;font-weight:700;z-index:1}
-.tl .it.done .nd{background:var(--orange);color:#fff}
-.tl .it.now .nd{background:var(--navy);color:#fff;box-shadow:0 0 0 5px rgba(45,42,112,.15);animation:pulse 1.6s infinite}
-@keyframes pulse{50%{box-shadow:0 0 0 9px rgba(45,42,112,.05)}}
-.tl .bd{flex:1;padding-top:4px}
-.tl .bd b{font-size:13.5px;color:var(--navy-d)}
-.tl .bd .tm{float:right;font-size:12px;font-weight:600;color:var(--orange)}
-.tl .bd p{font-size:11.5px;color:var(--text2);margin-top:2px;line-height:1.5}
-.tl .it.wait .bd b{color:var(--text2)}
-.livemap{height:150px;border-radius:16px;background:var(--navy-l);position:relative;overflow:hidden;margin-top:12px}
-.alert{display:flex;gap:10px;align-items:flex-start;border-radius:14px;padding:12px;font-size:12px;line-height:1.5}
-.alert.o{background:var(--orange-l);color:#7A3410}
-.alert.n{background:var(--navy-l);color:var(--navy-d)}
-.alert.g{background:var(--green-l);color:#14603A}
-.alert svg{flex:none;margin-top:2px}
-.shuttle{display:flex;gap:12px;align-items:center}
-.shuttle .bus{width:52px;height:52px;border-radius:14px;background:var(--orange-l);display:flex;align-items:center;justify-content:center;color:var(--orange)}
-.shuttle .info{flex:1;font-size:11.5px;color:var(--text2)}
-.shuttle .info b{display:block;font-size:14px;color:var(--navy-d)}
-.seat{height:6px;border-radius:6px;background:var(--line);margin-top:6px;overflow:hidden}
-.seat span{display:block;height:100%;background:var(--green)}
-.kv{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.kv div{background:var(--bg);border-radius:12px;padding:9px 10px;font-size:10.5px;color:var(--text2)}
-.kv b{display:block;font-size:13px;color:var(--navy-d)}
-/* qr */
-.qrbox{background:#fff;border-radius:22px;margin:16px;padding:20px;text-align:center;box-shadow:0 10px 30px rgba(30,28,77,.12);position:relative}
-.qrbox:before,.qrbox:after{content:"";position:absolute;top:58%;width:22px;height:22px;border-radius:50%;background:var(--bg)}
-.qrbox:before{left:-11px}.qrbox:after{right:-11px}
-.qrbox .dash{border-top:2px dashed var(--line);margin:16px -20px}
-.qr{width:200px;height:200px;margin:12px auto 0}
-.timer{font-size:11.5px;color:var(--text2);margin-top:8px}
-.timer b{color:var(--orange)}
-/* stats */
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-.st{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px}
-.st small{font-size:10.5px;color:var(--text2);display:block}
-.st b{font-size:19px;color:var(--navy-d);display:block;margin-top:2px}
-.st .d{font-size:10.5px;font-weight:600}
-.st .d.up{color:var(--green)}
-.st.acc{background:var(--navy);border-color:var(--navy)}
-.st.acc small{color:rgba(255,255,255,.75)}
-.st.acc b{color:#fff}
-.chart{display:flex;align-items:flex-end;gap:10px;height:120px;margin-top:12px;padding:0 4px}
-.chart .c{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;color:var(--text2)}
-.chart .stack{width:100%;display:flex;flex-direction:column;justify-content:flex-end;height:96px;border-radius:8px;overflow:hidden}
-.chart .stack span{display:block;width:100%}
-.lg{display:flex;gap:14px;font-size:10.5px;color:var(--text2);margin-top:8px}
-.lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
-.tbl{width:100%;border-collapse:collapse;font-size:11.5px;margin-top:8px}
-.tbl th{text-align:left;color:var(--text2);font-weight:500;padding:6px 4px;border-bottom:1px solid var(--line);font-size:10.5px}
-.tbl td{padding:8px 4px;border-bottom:1px solid var(--line)}
-.tbl td b{color:var(--navy-d)}
-.notif{display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:#fff}
-.notif.un{background:#FBFBFE}
-.notif .ni{width:38px;height:38px;border-radius:12px;flex:none;display:flex;align-items:center;justify-content:center}
-.notif .nb{flex:1;font-size:12px;color:var(--text2);line-height:1.5}
-.notif .nb b{display:block;color:var(--navy-d);font-size:13px}
-.notif .nt{font-size:10.5px;color:var(--text2);white-space:nowrap}
-.stars{display:flex;gap:8px;justify-content:center;margin:12px 0}
-.stars button{background:none;border:0;cursor:pointer;color:var(--line)}
-.stars button.on{color:#F5A623}
-.stars svg{width:34px;height:34px}
-.tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
-.tags button{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 10px;font:inherit;font-size:11px;cursor:pointer;color:var(--text)}
-.tags button.on{border-color:var(--navy);background:var(--navy-l);color:var(--navy);font-weight:600}
-.sheet-bg{position:absolute;inset:0;background:rgba(20,19,48,.45);z-index:20;display:none;align-items:flex-end}
-.sheet-bg.on{display:flex}
-.sheet{background:#fff;width:100%;border-radius:24px 24px 0 0;padding:10px 16px 22px;max-height:85%;overflow-y:auto;animation:up .25s ease}
-@keyframes up{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
-.sheet .grab{width:40px;height:4px;border-radius:4px;background:var(--line);margin:0 auto 12px}
-.sheet h3{font-size:16px;color:var(--navy-d)}
-.sheet p{font-size:12px;color:var(--text2);margin-top:6px;line-height:1.6}
-.toast{position:absolute;left:16px;right:16px;bottom:86px;background:var(--navy-d);color:#fff;font-size:12.5px;padding:12px 14px;border-radius:14px;z-index:30;display:none;align-items:center;gap:10px;box-shadow:0 8px 20px rgba(0,0,0,.2)}
-.toast.on{display:flex;animation:up .25s ease}
-.empty{text-align:center;color:var(--text2);font-size:12px;padding:24px}
-.small{font-size:11px;color:var(--text2)}
-.row{display:flex;justify-content:space-between;align-items:center}
-.divider{height:1px;background:var(--line);margin:12px 0}
-.badge-flex{background:var(--orange);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px}
-.badge-reg{background:var(--navy);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px}
-</style>
-</head>
-<body>
-<div class="stage">
-  <aside class="side">
-    <h1>Prototipe <span>KAI WorkLink</span> di dalam Access by KAI</h1>
-    <p>Prototipe konsep untuk BPC ITB Insight 2026 · Team LDR. Bukan aplikasi resmi; seluruh data adalah contoh.</p>
-    <ol>
-      <li>Ketuk menu <b>WorkLink</b> di Beranda atau tombol oranye di tengah.</li>
-      <li>Akun kantor terdeteksi otomatis dari <b>email kerja</b> yang didaftarkan HR.</li>
-      <li>Coba <b>Simulasikan perjalanan</b> di tab Perjalanan.</li>
-      <li>Ganti ke <b>Mode HR</b> untuk melihat dashboard perusahaan.</li>
-    </ol>
-    <span class="tag">Data ilustrasi · harga belum final</span>
-  </aside>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Prototipe WorkLink di Access by KAI</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/components.css" />
+    <link rel="stylesheet" href="assets/css/worklink.css" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <meta name="theme-color" content="#2D2A70" />
+    <link rel="icon" href="assets/img/icon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <div class="stage">
+      <aside class="side">
+        <h1>Prototipe <span>KAI WorkLink</span> di dalam Access by KAI</h1>
+        <p>
+          Prototipe konsep untuk BPC ITB Insight 2026 · Team LDR. Bukan aplikasi resmi; seluruh data adalah
+          contoh.
+        </p>
+        <ol>
+          <li>Ketuk menu <b>WorkLink</b> di Beranda atau tombol oranye di tengah.</li>
+          <li>Akun kantor terdeteksi otomatis dari <b>email kerja</b> yang didaftarkan HR.</li>
+          <li>Coba <b>Simulasikan perjalanan</b> di tab Perjalanan.</li>
+          <li>Ganti ke <b>Mode HR</b> untuk melihat dashboard perusahaan.</li>
+        </ol>
+        <span class="tag">Data ilustrasi · harga belum final</span>
+      </aside>
 
-  <div class="phone" id="phone">
-    <div class="status"><span id="clock">06.12</span><span class="ic"><svg width="16" height="11" viewBox="0 0 16 11" fill="#fff"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.3" y="5" width="3" height="6" rx="1"/><rect x="8.6" y="2.5" width="3" height="8.5" rx="1"/><rect x="12.9" y="0" width="3" height="11" rx="1"/></svg><i></i></span></div>
-    <div class="proto">PROTOTIPE KONSEP · BUKAN APLIKASI RESMI KAI · DATA CONTOH</div>
+      <div class="phone" id="phone">
+        <div class="status">
+          <span id="clock">06.12</span
+          ><span class="ic"
+            ><svg width="16" height="11" viewBox="0 0 16 11" fill="#fff">
+              <rect x="0" y="7" width="3" height="4" rx="1" />
+              <rect x="4.3" y="5" width="3" height="6" rx="1" />
+              <rect x="8.6" y="2.5" width="3" height="8.5" rx="1" />
+              <rect x="12.9" y="0" width="3" height="11" rx="1" /></svg
+            ><i></i
+          ></span>
+        </div>
+        <div class="proto">PROTOTIPE KONSEP · BUKAN APLIKASI RESMI KAI · DATA CONTOH</div>
 
-    <div class="screens">
-
-      <!-- ================= BERANDA ================= -->
-      <section class="screen on" id="s-home">
-        <div class="hero">
-          <div class="brand">
-            <div class="wm">access <small>by KAI</small></div>
-            <div style="display:flex;gap:8px">
-              <button class="iconbtn" aria-label="Cari" onclick="sheet('cari')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
-              <button class="iconbtn" aria-label="Notifikasi" onclick="go('notif')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><span class="dot"></span></button>
+        <div class="screens">
+          <!-- ================= BERANDA ================= -->
+          <section class="screen on" id="s-home">
+            <div class="hero">
+              <div class="brand">
+                <div class="wm">access <small>by KAI</small></div>
+                <div style="display: flex; gap: 8px">
+                  <button class="iconbtn" aria-label="Cari" onclick="sheet('cari')">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    >
+                      <circle cx="11" cy="11" r="7" />
+                      <path d="M20 20l-3.5-3.5" />
+                    </svg>
+                  </button>
+                  <button class="iconbtn" aria-label="Notifikasi" onclick="go('notif')">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    >
+                      <path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8" />
+                      <path d="M10 20a2 2 0 0 0 4 0" /></svg
+                    ><span class="dot"></span>
+                  </button>
+                </div>
+              </div>
+              <div class="hello">
+                <p id="greet">Selamat pagi,</p>
+                <h2>Rafki Yudawijaya</h2>
+              </div>
             </div>
-          </div>
-          <div class="hello"><p id="greet">Selamat pagi,</p><h2>Rafki Yudawijaya</h2></div>
-        </div>
-        <div class="cardfloat">
-          <div class="pts"><div class="coin">RP</div><div><small>RailPoint</small><b>2.450 poin</b></div></div>
-          <div class="vsep"></div>
-          <div class="member"><span>Member</span><b>Premium</b></div>
-          <div class="vsep"></div>
-          <div class="member" style="cursor:pointer" onclick="sheet('karbon')"><span>Jejak karbon</span><b style="color:var(--green)">−18 kg CO₂</b></div>
-        </div>
-
-        <div class="sec">
-          <h3>Layanan</h3>
-          <div class="grid">
-            <button class="mi" onclick="sheet('antarkota')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14M9 17l-2 4M15 17l2 4M9 14h.01M15 14h.01"/></svg></span>Antar Kota</button>
-            <button class="mi" onclick="sheet('lokal')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="12" rx="2"/><path d="M4 10h16M8 20l2-4M16 20l-2-4"/></svg></span>Lokal</button>
-            <button class="mi" onclick="sheet('commuter')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3z"/><path d="M4 11h16M8 21l1.5-3M16 21l-1.5-3M12 3v8"/></svg></span>Commuter Line</button>
-            <button class="mi" onclick="sheet('bandara')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16l20-6-4-2-6 2-5-4-2 1 3 4-4 1-2-1-1 1z"/><path d="M3 20h18"/></svg></span>KA Bandara</button>
-            <button class="mi wl" onclick="openWL()"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="10" rx="3"/><path d="M3 12h18M7 17v2M17 17v2M8 7V5h8v2"/></svg><span class="new">BARU</span></span>WorkLink</button>
-            <button class="mi" onclick="sheet('tracking')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span>Live Tracking</button>
-            <button class="mi" onclick="sheet('planner')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg></span>Trip Planner</button>
-            <button class="mi" onclick="sheet('hotel')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20V8l9-4 9 4v12"/><path d="M8 20v-5h8v5M8 11h.01M12 11h.01M16 11h.01"/></svg></span>Hotel</button>
-            <button class="mi" onclick="sheet('porter')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="7" width="12" height="11" rx="2"/><path d="M9 7V4h6v3M9 21h.01M15 21h.01"/></svg></span>E-Porter</button>
-            <button class="mi" onclick="sheet('ppob')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></span>Pulsa &amp; Tagihan</button>
-            <button class="mi" onclick="sheet('railpoint')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8l1.2 2.5 2.8.4-2 2 .5 2.8L12 14.4l-2.5 1.3.5-2.8-2-2 2.8-.4z"/></svg></span>RailPoint</button>
-            <button class="mi" onclick="sheet('karbon')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z"/><path d="M5 19l7-7"/></svg></span>Jejak Karbon</button>
-          </div>
-        </div>
-
-        <div class="banner" onclick="openWL()">
-          <div style="flex:1;position:relative;z-index:1">
-            <h4>Kerja tanpa ribet, dari KRL sampai meja kantor</h4>
-            <p>KAI WorkLink: langganan KRL + shuttle, dibayar kantor. Lebih hemat di luar jam sibuk.</p>
-            <span class="cta">Aktifkan sekarang</span>
-          </div>
-          <svg width="74" height="74" viewBox="0 0 74 74" fill="none"><rect x="6" y="20" width="62" height="34" rx="10" fill="#fff" opacity=".95"/><rect x="6" y="38" width="62" height="6" fill="#ED6B23"/><rect x="12" y="25" width="14" height="10" rx="3" fill="#2D2A70"/><rect x="30" y="25" width="14" height="10" rx="3" fill="#2D2A70"/><rect x="48" y="25" width="14" height="10" rx="3" fill="#2D2A70"/><circle cx="20" cy="56" r="6" fill="#1E1C4D"/><circle cx="54" cy="56" r="6" fill="#1E1C4D"/></svg>
-        </div>
-
-        <div class="sec">
-          <h3>Tiket aktif <a onclick="go('tiket')">Lihat semua</a></h3>
-          <div class="card mt ticket" onclick="sheet('commuterqr')" style="cursor:pointer">
-            <div class="tl"><small>Commuter Line · Hari ini</small><div class="route">Bogor <svg width="16" height="10" viewBox="0 0 16 10"><path d="M0 5h14M10 1l4 4-4 4" fill="none" stroke="#ED6B23" stroke-width="2"/></svg> Sudirman</div><span class="chip o" style="margin-top:6px">Ditanggung WorkLink</span></div>
-            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#2D2A70" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM18 18h3v3M14 20h2"/></svg>
-          </div>
-        </div>
-
-        <div class="sec">
-          <h3>Info &amp; promo</h3>
-          <div class="hscroll">
-            <div class="promo" style="background:var(--navy)"><b>Tukar RailPoint</b>Pakai poin di merchant mitra KAI.</div>
-            <div class="promo" style="background:var(--orange)"><b>Live Tracking</b>Pantau posisi kereta secara real time.</div>
-            <div class="promo" style="background:#5A2C6B"><b>Trip Planner</b>Rencanakan wisata sekaligus hotelnya.</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= TIKET ================= -->
-      <section class="screen" id="s-tiket">
-        <div class="ph"><h2>Tiket Saya<div class="sub">Tiket aktif dan riwayat perjalanan</div></h2></div>
-        <div class="sec">
-          <div class="card ticket" onclick="sheet('commuterqr')" style="cursor:pointer">
-            <div class="tl"><small>Commuter Line · Hari ini · 06.15</small><div class="route">Bogor → Sudirman</div><span class="chip o" style="margin-top:6px">WorkLink · Paket Flex</span></div>
-            <span class="chip g">Aktif</span>
-          </div>
-          <div class="card mt ticket">
-            <div class="tl"><small>Antar Kota · Sab, 21 Nov 2026</small><div class="route">Gambir → Yogyakarta</div><small>Taksaka · Eksekutif · Kursi 4A</small></div>
-            <span class="chip n">Terjadwal</span>
-          </div>
-          <div class="card mt ticket">
-            <div class="tl"><small>KA Bandara · 2 Nov 2026</small><div class="route">BNI City → Bandara Soetta</div></div>
-            <span class="chip" style="background:var(--bg);color:var(--text2)">Selesai</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= NOTIFIKASI ================= -->
-      <section class="screen" id="s-notif">
-        <div class="ph"><h2>Notifikasi<div class="sub">WorkLink dan perjalanan</div></h2></div>
-        <div id="notifList"></div>
-      </section>
-
-      <!-- ================= AKUN ================= -->
-      <section class="screen" id="s-akun">
-        <div class="ph"><h2>Akun</h2></div>
-        <div class="sec">
-          <div class="card row"><div><b style="color:var(--navy-d)">Rafki Yudawijaya</b><div class="small">Member Premium · 2.450 RailPoint</div></div><span class="chip n">Terverifikasi</span></div>
-          <div class="card mt">
-            <div class="row"><b style="font-size:13px;color:var(--navy-d)">KAI WorkLink</b><span class="chip g" id="akunWL">Belum aktif</span></div>
-            <p class="small" style="margin-top:6px" id="akunWLdesc">WorkLink aktif otomatis jika email kerjamu didaftarkan HR perusahaan mitra.</p>
-          </div>
-          <div class="card mt small" style="line-height:1.9">Data pribadi · Metode pembayaran · Bantuan · Syarat &amp; ketentuan · Keluar</div>
-        </div>
-      </section>
-
-      <!-- ================= WL: ONBOARDING ================= -->
-      <section class="screen" id="s-wl-onb">
-        <div class="ph"><button onclick="go('home')" aria-label="Kembali"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button><h2>Aktivasi WorkLink<div class="sub">Langkah <span id="onbStep">1</span> dari 3</div></h2></div>
-        <div class="sec">
-          <div class="steps"><i class="on" id="st1"></i><i id="st2"></i><i id="st3"></i></div>
-
-          <div id="onb1">
-            <div class="alert g"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12l5 5 9-10"/></svg><div><b>Akun kantormu terdeteksi.</b> HR PT Maju Sejahtera sudah mendaftarkan email kerjamu ke WorkLink. Tidak perlu kode apa pun.</div></div>
-            <div class="card mt" id="compFound">
-              <div class="row"><div><div class="small">Email kerja terdaftar</div><b style="color:var(--navy-d);font-size:14px" id="workEmail">rafki@majusejahtera.co.id</b></div><span class="chip g">Cocok</span></div>
-              <div class="divider"></div>
-              <div class="row"><div><b style="color:var(--navy-d);font-size:14px">PT Maju Sejahtera</b><div class="small">Menara Sudirman · 214 karyawan terdaftar</div></div><span class="chip n">Mitra WorkLink</span></div>
-              <div class="divider"></div>
-              <div class="row small"><span>Paket kantor</span><b style="color:var(--navy-d)">Flex + Hybrid</b></div>
-              <div class="row small" style="margin-top:4px"><span>Ditanggung perusahaan</span><b style="color:var(--navy-d)">70%</b></div>
+            <div class="cardfloat">
+              <div class="pts">
+                <div class="coin">RP</div>
+                <div><small>RailPoint</small><b>2.450 poin</b></div>
+              </div>
+              <div class="vsep"></div>
+              <div class="member"><span>Member</span><b>Premium</b></div>
+              <div class="vsep"></div>
+              <div class="member" style="cursor: pointer" onclick="sheet('karbon')">
+                <span>Jejak karbon</span><b style="color: var(--green)">−18 kg CO₂</b>
+              </div>
             </div>
-            <p class="small" style="margin-top:10px;line-height:1.6">Terdeteksi dari email kerja yang terhubung ke akun Access by KAI-mu. Bukan kamu, atau email kerjamu berbeda?</p>
-            <button class="btn s" style="margin-top:8px" onclick="toggleEmail()">Gunakan email kerja lain</button>
-            <div id="emailBox" style="display:none">
-              <label class="f" for="email">Email kerja</label>
-              <input class="inp" id="email" type="email" placeholder="nama@kantor.co.id" autocomplete="off">
-              <div class="err" id="codeErr">Domain email belum terdaftar di WorkLink. Untuk demo, gunakan @majusejahtera.co.id.</div>
-              <button class="btn n mt" onclick="checkEmail()">Cek email</button>
+
+            <div class="sec">
+              <h3>Layanan</h3>
+              <div class="grid">
+                <button class="mi" onclick="sheet('antarkota')">
+                  <span class="ico"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="5" y="3" width="14" height="14" rx="3" />
+                      <path d="M5 11h14M9 17l-2 4M15 17l2 4M9 14h.01M15 14h.01" /></svg></span
+                  >Antar Kota
+                </button>
+                <button class="mi" onclick="sheet('lokal')">
+                  <span class="ico"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="4" y="4" width="16" height="12" rx="2" />
+                      <path d="M4 10h16M8 20l2-4M16 20l-2-4" /></svg></span
+                  >Lokal
+                </button>
+                <button class="mi" onclick="sheet('commuter')">
+                  <span class="ico"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M7 3h10a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3z" />
+                      <path d="M4 11h16M8 21l1.5-3M16 21l-1.5-3M12 3v8" /></svg></span
+                  >Commuter Line
+                </button>
+                <button class="mi" onclick="sheet('bandara')">
+                  <span class="ico"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M2 16l20-6-4-2-6 2-5-4-2 1 3 4-4 1-2-1-1 1z" />
+                      <path d="M3 20h18" /></svg></span
+                  >KA Bandara
+                </button>
+                <button class="mi wl" onclick="openWL()">
+                  <span class="ico"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="3" y="7" width="18" height="10" rx="3" />
+                      <path d="M3 12h18M7 17v2M17 17v2M8 7V5h8v2" /></svg
+                    ><span class="new">BARU</span></span
+                  >WorkLink
+                </button>
+                <button class="mi" onclick="sheet('tracking')">
+                  <span class="ico"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z" />
+                      <circle cx="12" cy="9" r="2.5" /></svg></span
+                  >Live Tracking
+                </button>
+                <button class="mi" onclick="sheet('planner')">
+                  <span class="ico"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z" />
+                      <path d="M9 4v14M15 6v14" /></svg></span
+                  >Trip Planner
+                </button>
+                <button class="mi" onclick="sheet('hotel')">
+                  <span class="ico"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M3 20V8l9-4 9 4v12" />
+                      <path d="M8 20v-5h8v5M8 11h.01M12 11h.01M16 11h.01" /></svg></span
+                  >Hotel
+                </button>
+                <button class="mi" onclick="sheet('porter')">
+                  <span class="ico"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="6" y="7" width="12" height="11" rx="2" />
+                      <path d="M9 7V4h6v3M9 21h.01M15 21h.01" /></svg></span
+                  >E-Porter
+                </button>
+                <button class="mi" onclick="sheet('ppob')">
+                  <span class="ico"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="7" y="2" width="10" height="20" rx="2" />
+                      <path d="M11 18h2" /></svg></span
+                  >Pulsa &amp; Tagihan
+                </button>
+                <button class="mi" onclick="sheet('railpoint')">
+                  <span class="ico"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="8" />
+                      <path
+                        d="M12 8l1.2 2.5 2.8.4-2 2 .5 2.8L12 14.4l-2.5 1.3.5-2.8-2-2 2.8-.4z"
+                      /></svg></span
+                  >RailPoint
+                </button>
+                <button class="mi" onclick="sheet('karbon')">
+                  <span class="ico"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z" />
+                      <path d="M5 19l7-7" /></svg></span
+                  >Jejak Karbon
+                </button>
+              </div>
             </div>
-            <button class="btn p" style="margin-top:12px" onclick="onbGo(2)">Ya, ini kantor saya</button>
-          </div>
 
-          <div id="onb2" style="display:none">
-            <h3 style="font-size:15px;color:var(--navy-d)">Atur rute harianmu</h3>
-            <label class="f" for="from">Stasiun asal</label>
-            <select class="inp" id="from"><option>Bogor</option><option>Depok</option><option>Bekasi</option><option>Tangerang</option><option>Serpong</option></select>
-            <label class="f" for="to">Stasiun tujuan</label>
-            <select class="inp" id="to"><option>Sudirman</option><option>Karet</option><option>Tanah Abang</option><option>Manggarai</option></select>
-            <label class="f">Titik jemput shuttle</label>
-            <div class="opt on" onclick="pick(this,'pt')"><span class="rad"></span><div><b>Bay B2 · Pintu Barat Sudirman</b><small>2 menit jalan kaki · ke Menara Sudirman</small></div></div>
-            <div class="opt" onclick="pick(this,'pt')"><span class="rad"></span><div><b>Bay A1 · Pintu Timur</b><small>4 menit jalan kaki · ke kawasan Setiabudi</small></div></div>
-            <label class="f">Pola kerja</label>
-            <div class="opt on" onclick="pick(this,'pk')"><span class="rad"></span><div><b>Flex</b><small>Berangkat di luar jam sibuk, shuttle lebih murah</small></div></div>
-            <div class="opt" onclick="pick(this,'pk')"><span class="rad"></span><div><b>Reguler</b><small>Berangkat dan pulang di jam sibuk</small></div></div>
-            <div class="opt" onclick="pick(this,'pk')"><span class="rad"></span><div><b>Hybrid</b><small>Ke kantor 3 hari per minggu</small></div></div>
-            <button class="btn p" style="margin-top:16px" onclick="onbGo(3)">Lanjut</button>
-          </div>
-
-          <div id="onb3" style="display:none">
-            <h3 style="font-size:15px;color:var(--navy-d)">Persetujuan data perjalanan</h3>
-            <div class="card mt small" style="line-height:1.7">
-              <b style="color:var(--navy-d)">Yang dibagikan ke HR</b><br>• Jumlah perjalanan dan biaya bulanan<br>• Porsi perjalanan di luar jam sibuk<br>• Estimasi emisi yang dihemat<br><div class="divider"></div>
-              <b style="color:var(--navy-d)">Yang tidak dibagikan</b><br>• Riwayat lokasi detail dan jam per perjalanan<br>• Data pribadi di luar perjalanan kerja
+            <div class="banner" onclick="openWL()">
+              <div style="flex: 1; position: relative; z-index: 1">
+                <h4>Kerja tanpa ribet, dari KRL sampai meja kantor</h4>
+                <p>KAI WorkLink: langganan KRL + shuttle, dibayar kantor. Lebih hemat di luar jam sibuk.</p>
+                <span class="cta">Aktifkan sekarang</span>
+              </div>
+              <svg width="74" height="74" viewBox="0 0 74 74" fill="none">
+                <rect x="6" y="20" width="62" height="34" rx="10" fill="#fff" opacity=".95" />
+                <rect x="6" y="38" width="62" height="6" fill="#ED6B23" />
+                <rect x="12" y="25" width="14" height="10" rx="3" fill="#2D2A70" />
+                <rect x="30" y="25" width="14" height="10" rx="3" fill="#2D2A70" />
+                <rect x="48" y="25" width="14" height="10" rx="3" fill="#2D2A70" />
+                <circle cx="20" cy="56" r="6" fill="#1E1C4D" />
+                <circle cx="54" cy="56" r="6" fill="#1E1C4D" />
+              </svg>
             </div>
-            <label class="check"><input type="checkbox" id="consent" onchange="document.getElementById('consErr').style.display='none'">Saya setuju data perjalanan kerja dipakai untuk penagihan dan laporan agregat sesuai UU Pelindungan Data Pribadi.</label>
-            <div class="err" id="consErr">Centang persetujuan dulu untuk melanjutkan.</div>
-            <button class="btn p" style="margin-top:16px" onclick="finishOnb()">Aktifkan WorkLink</button>
-          </div>
-        </div>
-      </section>
 
-      <!-- ================= WL: HOME (KARYAWAN) ================= -->
-      <section class="screen" id="s-wl">
-        <div class="wlhero">
-          <div class="top">
-            <div><div class="logo">Work<b>Link</b></div><div class="comp">PT Maju Sejahtera · Paket Flex</div></div>
-            <div class="toggle"><button class="on" onclick="mode('emp')">Karyawan</button><button onclick="mode('hr')">Mode HR</button></div>
-          </div>
-          <div class="peak">
-            <div class="row"><div><div class="lbl">Status sekarang</div><div class="big" id="peakStatus">Di luar jam sibuk</div></div><span class="badge-flex" id="peakBadge">HARGA FLEX</span></div>
-            <div class="bar"><span style="flex:1;background:#7AD3A0"></span><span style="flex:2;background:var(--orange)"></span><span style="flex:8;background:#7AD3A0"></span><span style="flex:2;background:var(--orange)"></span><span style="flex:2.5;background:#7AD3A0"></span></div>
-            <div class="legend"><span>05.30</span><span>06.30–08.30</span><span>16.30–18.30</span><span>21.00</span></div>
-            <div class="lbl" style="margin-top:8px" id="peakHint">Berangkat sebelum 06.30 untuk tetap dapat harga Flex · sisa 18 menit</div>
-          </div>
-        </div>
-        <div class="float2">
-          <div class="card">
-            <div class="pkg"><div class="nm">Biaya shuttle per perjalanan<b>Hari ini</b></div><span class="chip o">Hemat 25%</span></div>
-            <div class="prices">
-              <div class="price"><small>Reguler (jam sibuk)</small><b>Rp10.000</b></div>
-              <div class="price flex"><small>Flex (luar jam sibuk)</small><b>Rp7.500</b></div>
+            <div class="sec">
+              <h3>Tiket aktif <a onclick="go('tiket')">Lihat semua</a></h3>
+              <div class="card mt ticket" onclick="sheet('commuterqr')" style="cursor: pointer">
+                <div class="tl">
+                  <small>Commuter Line · Hari ini</small>
+                  <div class="route">
+                    Bogor
+                    <svg width="16" height="10" viewBox="0 0 16 10">
+                      <path d="M0 5h14M10 1l4 4-4 4" fill="none" stroke="#ED6B23" stroke-width="2" />
+                    </svg>
+                    Sudirman
+                  </div>
+                  <span class="chip o" style="margin-top: 6px">Ditanggung WorkLink</span>
+                </div>
+                <svg
+                  width="44"
+                  height="44"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#2D2A70"
+                  stroke-width="1.6"
+                >
+                  <rect x="3" y="3" width="7" height="7" rx="1" />
+                  <rect x="14" y="3" width="7" height="7" rx="1" />
+                  <rect x="3" y="14" width="7" height="7" rx="1" />
+                  <path d="M14 14h3v3h-3zM18 18h3v3M14 20h2" />
+                </svg>
+              </div>
             </div>
-            <p class="small" style="margin-top:8px">KRL tetap tarif resmi. Kantor menanggung 70%, sisanya dipotong dari gaji. Angka ilustrasi.</p>
-          </div>
-        </div>
-        <div class="sec">
-          <div class="qa">
-            <button onclick="go('wl-trip')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h8a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h8"/></svg>Perjalanan</button>
-            <button onclick="go('wl-qr')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM18 18h3v3"/></svg>QR Shuttle</button>
-            <button onclick="go('wl-hist')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></svg>Riwayat</button>
-            <button onclick="sheet('bantuan')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17h.01"/></svg>Bantuan</button>
-          </div>
-        </div>
-        <div class="sec">
-          <h3>Rekomendasi berangkat <a onclick="go('wl-trip')">Mulai</a></h3>
-          <div class="card mt" style="padding:4px 14px">
-            <div class="trip" onclick="go('wl-trip')"><div class="t"><b>06.15</b><small>Bogor</small></div><div class="mid"><b>KRL tiba Sudirman 07.02</b>Shuttle 07.05 · tiba kantor 07.25</div><div class="pr"><span class="badge-flex">FLEX</span><b>Rp7.500</b></div></div>
-            <div class="trip"><div class="t"><b>06.27</b><small>Bogor</small></div><div class="mid"><b>KRL tiba Sudirman 07.14</b>Shuttle 07.17 · tiba kantor 07.37</div><div class="pr"><span class="badge-flex">FLEX</span><b>Rp7.500</b></div></div>
-            <div class="trip"><div class="t"><b>06.40</b><small>Bogor</small></div><div class="mid"><b>KRL tiba Sudirman 07.27 · padat</b>Shuttle 07.30 · tiba kantor 07.50</div><div class="pr"><span class="badge-reg">REGULER</span><b>Rp10.000</b></div></div>
-          </div>
-        </div>
-        <div class="sec">
-          <h3>Bulan ini</h3>
-          <div class="stats">
-            <div class="st"><small>Hari ke kantor</small><b>18 hari</b><span class="d up">28 dari 36 perjalanan Flex</span></div>
-            <div class="st"><small>Emisi dihemat</small><b>18 kg CO₂</b><span class="d up">vs motor pribadi</span></div>
-            <div class="st"><small>Ketepatan tiba</small><b>96%</b><span class="d up">sebelum 07.45</span></div>
-            <div class="st acc"><small>Bagianmu (30%)</small><b>Rp141.000</b><span class="small" style="color:rgba(255,255,255,.7)">dipotong dari gaji</span></div>
-          </div>
-        </div>
-      </section>
 
-      <!-- ================= WL: PERJALANAN ================= -->
-      <section class="screen" id="s-wl-trip">
-        <div class="ph"><button onclick="go('wl')" aria-label="Kembali"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button><h2>Perjalanan Hari Ini<div class="sub">Bogor → Sudirman → Menara Sudirman</div></h2></div>
-        <div class="sec">
-          <div id="tripAlert"></div>
-          <div class="livemap">
-            <svg width="100%" height="150" viewBox="0 0 358 150" preserveAspectRatio="none">
-              <path d="M20 120 C 90 120, 110 40, 190 45 S 300 70, 338 30" fill="none" stroke="#C9C6EA" stroke-width="8" stroke-linecap="round"/>
-              <path id="prog" d="M20 120 C 90 120, 110 40, 190 45 S 300 70, 338 30" fill="none" stroke="#ED6B23" stroke-width="8" stroke-linecap="round" stroke-dasharray="420" stroke-dashoffset="420"/>
-              <circle cx="20" cy="120" r="7" fill="#2D2A70"/><circle cx="190" cy="45" r="7" fill="#2D2A70"/><circle cx="338" cy="30" r="7" fill="#2D2A70"/>
-              <text x="20" y="142" font-size="10" fill="#1E1C4D" font-family="Poppins">Bogor</text>
-              <text x="168" y="30" font-size="10" fill="#1E1C4D" font-family="Poppins">Sudirman</text>
-              <text x="282" y="18" font-size="10" fill="#1E1C4D" font-family="Poppins">Kantor</text>
-              <g id="dotg"><circle id="mover" cx="20" cy="120" r="9" fill="#fff" stroke="#ED6B23" stroke-width="4"/></g>
-            </svg>
-          </div>
-          <div class="card mt">
-            <div class="tl" id="timeline"></div>
-          </div>
-          <div class="card mt" id="shuttleCard">
-            <div class="shuttle">
-              <div class="bus"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="5" width="18" height="12" rx="3"/><path d="M3 11h18M7 17v2M17 17v2"/></svg></div>
-              <div class="info"><b>Shuttle WL-07 · B 7204 KAI</b>Bay B2 · Pengemudi: Pak Darto · Rute Sudirman–Setiabudi<div class="seat"><span id="seatbar" style="width:36%"></span></div><span id="seattxt">9 dari 14 kursi tersedia</span></div>
+            <div class="sec">
+              <h3>Info &amp; promo</h3>
+              <div class="hscroll">
+                <div class="promo" style="background: var(--navy)">
+                  <b>Tukar RailPoint</b>Pakai poin di merchant mitra KAI.
+                </div>
+                <div class="promo" style="background: var(--orange)">
+                  <b>Live Tracking</b>Pantau posisi kereta secara real time.
+                </div>
+                <div class="promo" style="background: #5a2c6b">
+                  <b>Trip Planner</b>Rencanakan wisata sekaligus hotelnya.
+                </div>
+              </div>
             </div>
-            <div class="kv"><div>Perkiraan berangkat<b id="kvDep">07.05</b></div><div>Perkiraan tiba kantor<b id="kvArr">07.25</b></div></div>
-          </div>
-          <button class="btn p mt" id="simBtn" onclick="simStep()">Simulasikan: tap-in di Bogor</button>
-          <button class="btn s mt" onclick="simDelay()">Simulasikan KRL terlambat</button>
-        </div>
-      </section>
+          </section>
 
-      <!-- ================= WL: QR ================= -->
-      <section class="screen" id="s-wl-qr">
-        <div class="ph"><button onclick="go('wl')" aria-label="Kembali"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button><h2>QR Shuttle<div class="sub">Tunjukkan ke pengemudi saat naik</div></h2></div>
-        <div class="qrbox">
-          <div class="row"><span class="small">Shuttle WL-07 · Bay B2</span><span class="badge-flex" id="qrBadge">FLEX</span></div>
-          <svg class="qr" id="qr" viewBox="0 0 29 29" shape-rendering="crispEdges"></svg>
-          <div class="timer">Kode berganti otomatis dalam <b id="qrT">30</b> detik</div>
-          <div class="dash"></div>
-          <div class="kv" style="text-align:left"><div>Harga shuttle<b id="qrPrice">Rp7.500</b></div><div>Ditanggung kantor<b>70%</b></div><div>Tap-in KRL<b>06.15 · Bogor</b></div><div>Status<b style="color:var(--green)">Siap dipindai</b></div></div>
-        </div>
-        <div class="sec" style="padding-top:0"><button class="btn n" onclick="scanDone()">Simulasikan: QR dipindai pengemudi</button></div>
-      </section>
+          <!-- ================= TIKET ================= -->
+          <section class="screen" id="s-tiket">
+            <div class="ph">
+              <h2>
+                Tiket Saya
+                <div class="sub">Tiket aktif dan riwayat perjalanan</div>
+              </h2>
+            </div>
+            <div class="sec">
+              <div class="card ticket" onclick="sheet('commuterqr')" style="cursor: pointer">
+                <div class="tl">
+                  <small>Commuter Line · Hari ini · 06.15</small>
+                  <div class="route">Bogor → Sudirman</div>
+                  <span class="chip o" style="margin-top: 6px">WorkLink · Paket Flex</span>
+                </div>
+                <span class="chip g">Aktif</span>
+              </div>
+              <div class="card mt ticket">
+                <div class="tl">
+                  <small>Antar Kota · Sab, 21 Nov 2026</small>
+                  <div class="route">Gambir → Yogyakarta</div>
+                  <small>Taksaka · Eksekutif · Kursi 4A</small>
+                </div>
+                <span class="chip n">Terjadwal</span>
+              </div>
+              <div class="card mt ticket">
+                <div class="tl">
+                  <small>KA Bandara · 2 Nov 2026</small>
+                  <div class="route">BNI City → Bandara Soetta</div>
+                </div>
+                <span class="chip" style="background: var(--bg); color: var(--text2)">Selesai</span>
+              </div>
+            </div>
+          </section>
 
-      <!-- ================= WL: RIWAYAT ================= -->
-      <section class="screen" id="s-wl-hist">
-        <div class="ph"><button onclick="go('wl')" aria-label="Kembali"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button><h2>Riwayat &amp; Tagihan<div class="sub">November 2026</div></h2></div>
-        <div class="sec">
-          <div class="card">
-            <div class="row"><div class="small">Total bulan ini</div><span class="chip n">Ditagih ke kantor</span></div>
-            <div style="font-size:24px;font-weight:700;color:var(--navy-d);margin-top:4px">Rp470.000</div>
-            <div class="divider"></div>
-            <div class="row small"><span>KRL (tarif resmi, 36 perjalanan)</span><b style="color:var(--navy-d)">Rp180.000</b></div>
-            <div class="row small" style="margin-top:4px"><span>Shuttle (28 Flex + 8 Reguler)</span><b style="color:var(--navy-d)">Rp290.000</b></div>
-            <div class="row small" style="margin-top:4px"><span>Ditanggung kantor (70%)</span><b style="color:var(--green)">Rp329.000</b></div>
-            <div class="row small" style="margin-top:4px"><span>Bagianmu (30%, potong gaji)</span><b style="color:var(--navy-d)">Rp141.000</b></div>
-            <p class="small" style="margin-top:8px">Tidak perlu reimburse. Semua angka ilustrasi.</p>
-          </div>
-          <h3 style="font-size:14px;color:var(--navy-d);margin-top:16px">Perjalanan terakhir</h3>
-          <div class="card mt" style="padding:4px 14px" id="histList"></div>
-        </div>
-      </section>
+          <!-- ================= NOTIFIKASI ================= -->
+          <section class="screen" id="s-notif">
+            <div class="ph">
+              <h2>
+                Notifikasi
+                <div class="sub">WorkLink dan perjalanan</div>
+              </h2>
+            </div>
+            <div id="notifList"></div>
+          </section>
 
-      <!-- ================= WL: RATING ================= -->
-      <section class="screen" id="s-wl-rate">
-        <div class="ph"><button onclick="go('wl')" aria-label="Kembali"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button><h2>Kamu sudah sampai</h2></div>
-        <div class="sec" style="text-align:center">
-          <div class="alert g" style="text-align:left"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12l5 5 9-10"/></svg><div><b>Tiba 07.25 di Menara Sudirman.</b><br>Total perjalanan 70 menit · hemat 1,1 kg CO₂ dibanding motor.</div></div>
-          <h3 style="font-size:15px;color:var(--navy-d);margin-top:18px">Bagaimana shuttle hari ini?</h3>
-          <div class="stars" id="stars"></div>
-          <div class="tags" id="tags"></div>
-          <textarea class="inp" id="fb" rows="3" placeholder="Ceritakan pengalamanmu (opsional)" style="margin-top:12px;resize:none"></textarea>
-          <div class="err" id="rateErr" style="text-align:left">Pilih jumlah bintang dulu.</div>
-          <button class="btn p mt" onclick="sendRate()">Kirim ulasan</button>
-        </div>
-      </section>
+          <!-- ================= AKUN ================= -->
+          <section class="screen" id="s-akun">
+            <div class="ph"><h2>Akun</h2></div>
+            <div class="sec">
+              <div class="card row">
+                <div>
+                  <b style="color: var(--navy-d)">Rafki Yudawijaya</b>
+                  <div class="small">Member Premium · 2.450 RailPoint</div>
+                </div>
+                <span class="chip n">Terverifikasi</span>
+              </div>
+              <div class="card mt">
+                <div class="row">
+                  <b style="font-size: 13px; color: var(--navy-d)">KAI WorkLink</b
+                  ><span class="chip g" id="akunWL">Belum aktif</span>
+                </div>
+                <p class="small" style="margin-top: 6px" id="akunWLdesc">
+                  WorkLink aktif otomatis jika email kerjamu didaftarkan HR perusahaan mitra.
+                </p>
+              </div>
+              <div class="card mt small" style="line-height: 1.9">
+                Data pribadi · Metode pembayaran · Bantuan · Syarat &amp; ketentuan · Keluar
+              </div>
+            </div>
+          </section>
 
-      <!-- ================= WL: HR DASHBOARD ================= -->
-      <section class="screen" id="s-hr">
-        <div class="wlhero" style="padding-bottom:20px">
-          <div class="top">
-            <div><div class="logo">Work<b>Link</b> HR</div><div class="comp">PT Maju Sejahtera · Nov 2026</div></div>
-            <div class="toggle"><button onclick="mode('emp')">Karyawan</button><button class="on" onclick="mode('hr')">Mode HR</button></div>
-          </div>
-        </div>
-        <div class="sec">
-          <div class="stats">
-            <div class="st acc"><small>Tagihan berjalan</small><b>Rp38,4 jt</b><span class="small" style="color:rgba(255,255,255,.7)">jatuh tempo 5 Des</span></div>
-            <div class="st"><small>Karyawan aktif</small><b>186 / 214</b><span class="d up">+12 bulan ini</span></div>
-            <div class="st"><small>Perjalanan di luar jam sibuk</small><b>64%</b><span class="d up">+9 poin</span></div>
-            <div class="st"><small>Ketepatan tiba</small><b>95,8%</b><span class="d up">target ≥ 95%</span></div>
-          </div>
-          <div class="card mt">
-            <div class="row"><b style="font-size:13px;color:var(--navy-d)">Perjalanan per minggu</b><span class="small">Flex vs Reguler</span></div>
-            <div class="chart" id="hrChart"></div>
-            <div class="lg"><span><i style="background:var(--orange)"></i>Flex</span><span><i style="background:var(--navy)"></i>Reguler</span></div>
-          </div>
-          <div class="card mt">
-            <b style="font-size:13px;color:var(--navy-d)">Rute utama</b>
-            <table class="tbl">
-              <tr><th>Rute</th><th>Karyawan</th><th>Flex</th><th>Tepat waktu</th></tr>
-              <tr><td><b>Bogor → Sudirman</b></td><td>72</td><td>68%</td><td>96%</td></tr>
-              <tr><td><b>Bekasi → Sudirman</b></td><td>51</td><td>59%</td><td>94%</td></tr>
-              <tr><td><b>Serpong → Karet</b></td><td>38</td><td>66%</td><td>97%</td></tr>
-              <tr><td><b>Depok → Sudirman</b></td><td>25</td><td>61%</td><td>95%</td></tr>
-            </table>
-          </div>
-          <div class="card mt">
-            <div class="row"><div><b style="font-size:13px;color:var(--navy-d)">Laporan keberlanjutan</b><div class="small">Estimasi emisi perjalanan karyawan (Scope 3)</div></div><span class="chip g">−3,1 ton CO₂</span></div>
-            <button class="btn s mt" onclick="toast('Laporan PDF November 2026 disiapkan (simulasi).')">Unduh laporan bulanan</button>
-          </div>
-          <div class="card mt">
-            <b style="font-size:13px;color:var(--navy-d)">Pengaturan paket</b>
-            <div class="row small" style="margin-top:8px"><span>Porsi ditanggung kantor</span><b style="color:var(--navy-d)">70%</b></div>
-            <div class="row small" style="margin-top:4px"><span>Paket aktif</span><b style="color:var(--navy-d)">Flex · Hybrid · Reguler</b></div>
-            <div class="row small" style="margin-top:4px"><span>Domain email terdaftar</span><b style="color:var(--navy-d)">@majusejahtera.co.id</b></div>
-          </div>
-        </div>
-      </section>
+          <!-- ================= WL: ONBOARDING ================= -->
+          <section class="screen" id="s-wl-onb">
+            <div class="ph">
+              <button onclick="go('home')" aria-label="Kembali">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                >
+                  <path d="M15 18l-6-6 6-6" />
+                </svg>
+              </button>
+              <h2>
+                Aktivasi WorkLink
+                <div class="sub">Langkah <span id="onbStep">1</span> dari 3</div>
+              </h2>
+            </div>
+            <div class="sec">
+              <div class="steps"><i class="on" id="st1"></i><i id="st2"></i><i id="st3"></i></div>
 
+              <div id="onb1">
+                <div class="alert g">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                  >
+                    <path d="M5 12l5 5 9-10" />
+                  </svg>
+                  <div>
+                    <b>Akun kantormu terdeteksi.</b> HR PT Maju Sejahtera sudah mendaftarkan email kerjamu ke
+                    WorkLink. Tidak perlu kode apa pun.
+                  </div>
+                </div>
+                <div class="card mt" id="compFound">
+                  <div class="row">
+                    <div>
+                      <div class="small">Email kerja terdaftar</div>
+                      <b style="color: var(--navy-d); font-size: 14px" id="workEmail"
+                        >rafki@majusejahtera.co.id</b
+                      >
+                    </div>
+                    <span class="chip g">Cocok</span>
+                  </div>
+                  <div class="divider"></div>
+                  <div class="row">
+                    <div>
+                      <b style="color: var(--navy-d); font-size: 14px">PT Maju Sejahtera</b>
+                      <div class="small">Menara Sudirman · 214 karyawan terdaftar</div>
+                    </div>
+                    <span class="chip n">Mitra WorkLink</span>
+                  </div>
+                  <div class="divider"></div>
+                  <div class="row small">
+                    <span>Paket kantor</span><b style="color: var(--navy-d)">Flex + Hybrid</b>
+                  </div>
+                  <div class="row small" style="margin-top: 4px">
+                    <span>Ditanggung perusahaan</span><b style="color: var(--navy-d)" data-bind="share"></b>
+                  </div>
+                </div>
+                <p class="small" style="margin-top: 10px; line-height: 1.6">
+                  Terdeteksi dari email kerja yang terhubung ke akun Access by KAI-mu. Bukan kamu, atau email
+                  kerjamu berbeda?
+                </p>
+                <button class="btn s" style="margin-top: 8px" onclick="toggleEmail()">
+                  Gunakan email kerja lain
+                </button>
+                <div id="emailBox" style="display: none">
+                  <label class="f" for="email">Email kerja</label>
+                  <input
+                    class="inp"
+                    id="email"
+                    type="email"
+                    placeholder="nama@kantor.co.id"
+                    autocomplete="off"
+                  />
+                  <div class="err" id="codeErr">
+                    Domain email belum terdaftar di WorkLink. Untuk demo, gunakan @majusejahtera.co.id.
+                  </div>
+                  <button class="btn n mt" onclick="checkEmail()">Cek email</button>
+                </div>
+                <button class="btn p" style="margin-top: 12px" onclick="onbGo(2)">Ya, ini kantor saya</button>
+              </div>
+
+              <div id="onb2" style="display: none">
+                <h3 style="font-size: 15px; color: var(--navy-d)">Atur rute harianmu</h3>
+                <label class="f" for="from">Stasiun asal</label>
+                <select class="inp" id="from">
+                  <option>Bogor</option>
+                  <option>Depok</option>
+                  <option>Bekasi</option>
+                  <option>Tangerang</option>
+                  <option>Serpong</option>
+                </select>
+                <label class="f" for="to">Stasiun tujuan</label>
+                <select class="inp" id="to">
+                  <option>Sudirman</option>
+                  <option>Karet</option>
+                  <option>Tanah Abang</option>
+                  <option>Manggarai</option>
+                </select>
+                <label class="f">Titik jemput shuttle</label>
+                <div class="opt on" onclick="pick(this, 'pt')">
+                  <span class="rad"></span>
+                  <div>
+                    <b>Bay B2 · Pintu Barat Sudirman</b><small>2 menit jalan kaki · ke Menara Sudirman</small>
+                  </div>
+                </div>
+                <div class="opt" onclick="pick(this, 'pt')">
+                  <span class="rad"></span>
+                  <div>
+                    <b>Bay A1 · Pintu Timur</b><small>4 menit jalan kaki · ke kawasan Setiabudi</small>
+                  </div>
+                </div>
+                <label class="f">Pola kerja</label>
+                <div class="opt on" onclick="pick(this, 'pk')">
+                  <span class="rad"></span>
+                  <div><b>Flex</b><small>Berangkat di luar jam sibuk, shuttle lebih murah</small></div>
+                </div>
+                <div class="opt" onclick="pick(this, 'pk')">
+                  <span class="rad"></span>
+                  <div><b>Reguler</b><small>Berangkat dan pulang di jam sibuk</small></div>
+                </div>
+                <div class="opt" onclick="pick(this, 'pk')">
+                  <span class="rad"></span>
+                  <div><b>Hybrid</b><small>Ke kantor 3 hari per minggu</small></div>
+                </div>
+                <button class="btn p" style="margin-top: 16px" onclick="onbGo(3)">Lanjut</button>
+              </div>
+
+              <div id="onb3" style="display: none">
+                <h3 style="font-size: 15px; color: var(--navy-d)">Persetujuan data perjalanan</h3>
+                <div class="card mt small" style="line-height: 1.7">
+                  <b style="color: var(--navy-d)">Yang dibagikan ke HR</b><br />• Jumlah perjalanan dan biaya
+                  bulanan<br />• Porsi perjalanan di luar jam sibuk<br />• Estimasi emisi yang dihemat<br />
+                  <div class="divider"></div>
+                  <b style="color: var(--navy-d)">Yang tidak dibagikan</b><br />• Riwayat lokasi detail dan
+                  jam per perjalanan<br />• Data pribadi di luar perjalanan kerja
+                </div>
+                <label class="check"
+                  ><input
+                    type="checkbox"
+                    id="consent"
+                    onchange="document.getElementById('consErr').style.display = 'none'"
+                  />Saya setuju data perjalanan kerja dipakai untuk penagihan dan laporan agregat sesuai UU
+                  Pelindungan Data Pribadi.</label
+                >
+                <div class="err" id="consErr">Centang persetujuan dulu untuk melanjutkan.</div>
+                <button class="btn p" style="margin-top: 16px" onclick="finishOnb()">
+                  Aktifkan WorkLink
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= WL: HOME (KARYAWAN) ================= -->
+          <section class="screen" id="s-wl">
+            <div class="wlhero">
+              <div class="top">
+                <div>
+                  <div class="logo">Work<b>Link</b></div>
+                  <div class="comp">PT Maju Sejahtera · Paket Flex</div>
+                </div>
+                <div class="toggle">
+                  <button class="on" onclick="mode('emp')">Karyawan</button
+                  ><button onclick="mode('hr')">Mode HR</button>
+                </div>
+              </div>
+              <div class="peak">
+                <div class="row">
+                  <div>
+                    <div class="lbl">Status sekarang</div>
+                    <div class="big" id="peakStatus">Di luar jam sibuk</div>
+                  </div>
+                  <span class="badge-flex" id="peakBadge">HARGA FLEX</span>
+                </div>
+                <div class="bar">
+                  <span style="flex: 1; background: #7ad3a0"></span
+                  ><span style="flex: 2; background: var(--orange)"></span
+                  ><span style="flex: 8; background: #7ad3a0"></span
+                  ><span style="flex: 2; background: var(--orange)"></span
+                  ><span style="flex: 2.5; background: #7ad3a0"></span>
+                </div>
+                <div class="legend">
+                  <span>05.30</span><span>06.30–08.30</span><span>16.30–18.30</span><span>21.00</span>
+                </div>
+                <div class="lbl" style="margin-top: 8px" id="peakHint">
+                  Berangkat sebelum 06.30 untuk tetap dapat harga Flex · sisa 18 menit
+                </div>
+              </div>
+            </div>
+            <div class="float2">
+              <div class="card">
+                <div class="pkg">
+                  <div class="nm">Biaya shuttle per perjalanan<b>Hari ini</b></div>
+                  <span class="chip o">Hemat <span data-bind="saving"></span></span>
+                </div>
+                <div class="prices">
+                  <div class="price"><small>Reguler (jam sibuk)</small><b data-bind="reg"></b></div>
+                  <div class="price flex"><small>Flex (luar jam sibuk)</small><b data-bind="flex"></b></div>
+                </div>
+                <p class="small" style="margin-top: 8px">
+                  KRL tetap tarif resmi. Kantor menanggung <span data-bind="share"></span>, sisanya dipotong
+                  dari gaji. Angka ilustrasi.
+                </p>
+              </div>
+            </div>
+            <div class="sec">
+              <div class="qa">
+                <button onclick="go('wl-trip')">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                  >
+                    <circle cx="6" cy="19" r="2" />
+                    <circle cx="18" cy="5" r="2" />
+                    <path d="M8 19h8a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h8" /></svg
+                  >Perjalanan
+                </button>
+                <button onclick="go('wl-qr')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                    <path d="M14 14h3v3h-3zM18 18h3v3" /></svg
+                  >QR Shuttle
+                </button>
+                <button onclick="go('wl-hist')">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                  >
+                    <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+                    <path d="M3 3v5h5M12 7v5l3 2" /></svg
+                  >Riwayat
+                </button>
+                <button onclick="sheet('bantuan')">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                  >
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17h.01" /></svg
+                  >Bantuan
+                </button>
+              </div>
+            </div>
+            <div class="sec">
+              <h3>Rekomendasi berangkat <a onclick="go('wl-trip')">Mulai</a></h3>
+              <div class="card mt" style="padding: 4px 14px">
+                <div class="trip" onclick="go('wl-trip')">
+                  <div class="t"><b>06.15</b><small>Bogor</small></div>
+                  <div class="mid"><b>KRL tiba Sudirman 07.02</b>Shuttle 07.05 · tiba kantor 07.25</div>
+                  <div class="pr"><span class="badge-flex">FLEX</span><b data-bind="flex"></b></div>
+                </div>
+                <div class="trip">
+                  <div class="t"><b>06.27</b><small>Bogor</small></div>
+                  <div class="mid"><b>KRL tiba Sudirman 07.14</b>Shuttle 07.17 · tiba kantor 07.37</div>
+                  <div class="pr"><span class="badge-flex">FLEX</span><b data-bind="flex"></b></div>
+                </div>
+                <div class="trip">
+                  <div class="t"><b>06.40</b><small>Bogor</small></div>
+                  <div class="mid">
+                    <b>KRL tiba Sudirman 07.27 · padat</b>Shuttle 07.30 · tiba kantor 07.50
+                  </div>
+                  <div class="pr"><span class="badge-reg">REGULER</span><b data-bind="reg"></b></div>
+                </div>
+              </div>
+            </div>
+            <div class="sec">
+              <h3>Bulan ini</h3>
+              <div class="stats">
+                <div class="st">
+                  <small>Hari ke kantor</small><b>18 hari</b
+                  ><span class="d up"
+                    ><span data-bind="flexTrips"></span> dari <span data-bind="krlTrips"></span> perjalanan
+                    Flex</span
+                  >
+                </div>
+                <div class="st">
+                  <small>Emisi dihemat</small><b>18 kg CO₂</b><span class="d up">vs motor pribadi</span>
+                </div>
+                <div class="st">
+                  <small>Ketepatan tiba</small><b>96%</b><span class="d up">sebelum 07.45</span>
+                </div>
+                <div class="st acc">
+                  <small>Bagianmu (<span data-bind="empShare"></span>)</small><b data-bind="empAmount"></b
+                  ><span class="small" style="color: rgba(255, 255, 255, 0.7)">dipotong dari gaji</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= WL: PERJALANAN ================= -->
+          <section class="screen" id="s-wl-trip">
+            <div class="ph">
+              <button onclick="go('wl')" aria-label="Kembali">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                >
+                  <path d="M15 18l-6-6 6-6" />
+                </svg>
+              </button>
+              <h2>
+                Perjalanan Hari Ini
+                <div class="sub">Bogor → Sudirman → Menara Sudirman</div>
+              </h2>
+            </div>
+            <div class="sec">
+              <div id="tripAlert"></div>
+              <div class="livemap">
+                <svg width="100%" height="150" viewBox="0 0 358 150" preserveAspectRatio="none">
+                  <path
+                    d="M20 120 C 90 120, 110 40, 190 45 S 300 70, 338 30"
+                    fill="none"
+                    stroke="#C9C6EA"
+                    stroke-width="8"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    id="prog"
+                    d="M20 120 C 90 120, 110 40, 190 45 S 300 70, 338 30"
+                    fill="none"
+                    stroke="#ED6B23"
+                    stroke-width="8"
+                    stroke-linecap="round"
+                    stroke-dasharray="420"
+                    stroke-dashoffset="420"
+                  />
+                  <circle cx="20" cy="120" r="7" fill="#2D2A70" />
+                  <circle cx="190" cy="45" r="7" fill="#2D2A70" />
+                  <circle cx="338" cy="30" r="7" fill="#2D2A70" />
+                  <text x="20" y="142" font-size="10" fill="#1E1C4D" font-family="Poppins">Bogor</text>
+                  <text x="168" y="30" font-size="10" fill="#1E1C4D" font-family="Poppins">Sudirman</text>
+                  <text x="282" y="18" font-size="10" fill="#1E1C4D" font-family="Poppins">Kantor</text>
+                  <g id="dotg">
+                    <circle id="mover" cx="20" cy="120" r="9" fill="#fff" stroke="#ED6B23" stroke-width="4" />
+                  </g>
+                </svg>
+              </div>
+              <div class="card mt">
+                <div class="tl" id="timeline"></div>
+              </div>
+              <div class="card mt" id="shuttleCard">
+                <div class="shuttle">
+                  <div class="bus">
+                    <svg
+                      width="28"
+                      height="28"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                    >
+                      <rect x="3" y="5" width="18" height="12" rx="3" />
+                      <path d="M3 11h18M7 17v2M17 17v2" />
+                    </svg>
+                  </div>
+                  <div class="info">
+                    <b>Shuttle WL-07 · B 7204 KAI</b>Bay B2 · Pengemudi: Pak Darto · Rute Sudirman–Setiabudi
+                    <div class="seat"><span id="seatbar" style="width: 36%"></span></div>
+                    <span id="seattxt">9 dari 14 kursi tersedia</span>
+                  </div>
+                </div>
+                <div class="kv">
+                  <div>Perkiraan berangkat<b id="kvDep">07.05</b></div>
+                  <div>Perkiraan tiba kantor<b id="kvArr">07.25</b></div>
+                </div>
+              </div>
+              <button class="btn p mt" id="simBtn" onclick="simStep()">Simulasikan: tap-in di Bogor</button>
+              <button class="btn s mt" onclick="simDelay()">Simulasikan KRL terlambat</button>
+            </div>
+          </section>
+
+          <!-- ================= WL: QR ================= -->
+          <section class="screen" id="s-wl-qr">
+            <div class="ph">
+              <button onclick="go('wl')" aria-label="Kembali">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                >
+                  <path d="M15 18l-6-6 6-6" />
+                </svg>
+              </button>
+              <h2>
+                QR Shuttle
+                <div class="sub">Tunjukkan ke pengemudi saat naik</div>
+              </h2>
+            </div>
+            <div class="qrbox">
+              <div class="row">
+                <span class="small">Shuttle WL-07 · Bay B2</span
+                ><span class="badge-flex" id="qrBadge">FLEX</span>
+              </div>
+              <svg class="qr" id="qr" viewBox="0 0 29 29" shape-rendering="crispEdges"></svg>
+              <div class="timer">Kode berganti otomatis dalam <b id="qrT">30</b> detik</div>
+              <div class="dash"></div>
+              <div class="kv" style="text-align: left">
+                <div>Harga shuttle<b id="qrPrice" data-bind="flex"></b></div>
+                <div>Ditanggung kantor<b data-bind="share"></b></div>
+                <div>Tap-in KRL<b>06.15 · Bogor</b></div>
+                <div>Status<b style="color: var(--green)">Siap dipindai</b></div>
+              </div>
+            </div>
+            <div class="sec" style="padding-top: 0">
+              <button class="btn n" onclick="scanDone()">Simulasikan: QR dipindai pengemudi</button>
+            </div>
+          </section>
+
+          <!-- ================= WL: RIWAYAT ================= -->
+          <section class="screen" id="s-wl-hist">
+            <div class="ph">
+              <button onclick="go('wl')" aria-label="Kembali">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                >
+                  <path d="M15 18l-6-6 6-6" />
+                </svg>
+              </button>
+              <h2>
+                Riwayat &amp; Tagihan
+                <div class="sub">November 2026</div>
+              </h2>
+            </div>
+            <div class="sec">
+              <div class="card">
+                <div class="row">
+                  <div class="small">Total bulan ini</div>
+                  <span class="chip n">Ditagih ke kantor</span>
+                </div>
+                <div
+                  style="font-size: 24px; font-weight: 700; color: var(--navy-d); margin-top: 4px"
+                  data-bind="billTotal"
+                ></div>
+                <div class="divider"></div>
+                <div class="row small">
+                  <span>KRL (tarif resmi, <span data-bind="krlTrips"></span> perjalanan)</span
+                  ><b style="color: var(--navy-d)" data-bind="billKrl"></b>
+                </div>
+                <div class="row small" style="margin-top: 4px">
+                  <span
+                    >Shuttle (<span data-bind="flexTrips"></span> Flex +
+                    <span data-bind="regTrips"></span> Reguler)</span
+                  ><b style="color: var(--navy-d)" data-bind="billShuttle"></b>
+                </div>
+                <div class="row small" style="margin-top: 4px">
+                  <span>Ditanggung kantor (<span data-bind="share"></span>)</span
+                  ><b style="color: var(--green)" data-bind="billCompany"></b>
+                </div>
+                <div class="row small" style="margin-top: 4px">
+                  <span>Bagianmu (<span data-bind="empShare"></span>, potong gaji)</span
+                  ><b style="color: var(--navy-d)" data-bind="empAmount"></b>
+                </div>
+                <p class="small" style="margin-top: 8px">Tidak perlu reimburse. Semua angka ilustrasi.</p>
+              </div>
+              <h3 style="font-size: 14px; color: var(--navy-d); margin-top: 16px">Perjalanan terakhir</h3>
+              <div class="card mt" style="padding: 4px 14px" id="histList"></div>
+            </div>
+          </section>
+
+          <!-- ================= WL: RATING ================= -->
+          <section class="screen" id="s-wl-rate">
+            <div class="ph">
+              <button onclick="go('wl')" aria-label="Kembali">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                >
+                  <path d="M15 18l-6-6 6-6" />
+                </svg>
+              </button>
+              <h2>Kamu sudah sampai</h2>
+            </div>
+            <div class="sec" style="text-align: center">
+              <div class="alert g" style="text-align: left">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                >
+                  <path d="M5 12l5 5 9-10" />
+                </svg>
+                <div>
+                  <b>Tiba 07.25 di Menara Sudirman.</b><br />Total perjalanan 70 menit · hemat 1,1 kg CO₂
+                  dibanding motor.
+                </div>
+              </div>
+              <h3 style="font-size: 15px; color: var(--navy-d); margin-top: 18px">
+                Bagaimana shuttle hari ini?
+              </h3>
+              <div class="stars" id="stars"></div>
+              <div class="tags" id="tags"></div>
+              <textarea
+                class="inp"
+                id="fb"
+                rows="3"
+                placeholder="Ceritakan pengalamanmu (opsional)"
+                style="margin-top: 12px; resize: none"
+              ></textarea>
+              <div class="err" id="rateErr" style="text-align: left">Pilih jumlah bintang dulu.</div>
+              <button class="btn p mt" onclick="sendRate()">Kirim ulasan</button>
+            </div>
+          </section>
+
+          <!-- ================= WL: HR DASHBOARD ================= -->
+          <section class="screen" id="s-hr">
+            <div class="wlhero" style="padding-bottom: 20px">
+              <div class="top">
+                <div>
+                  <div class="logo">Work<b>Link</b> HR</div>
+                  <div class="comp">PT Maju Sejahtera · Nov 2026</div>
+                </div>
+                <div class="toggle">
+                  <button onclick="mode('emp')">Karyawan</button
+                  ><button class="on" onclick="mode('hr')">Mode HR</button>
+                </div>
+              </div>
+            </div>
+            <div class="sec">
+              <div class="stats">
+                <div class="st acc">
+                  <small>Tagihan berjalan</small><b>Rp38,4 jt</b
+                  ><span class="small" style="color: rgba(255, 255, 255, 0.7)">jatuh tempo 5 Des</span>
+                </div>
+                <div class="st">
+                  <small>Karyawan aktif</small><b>186 / 214</b><span class="d up">+12 bulan ini</span>
+                </div>
+                <div class="st">
+                  <small>Perjalanan di luar jam sibuk</small><b>64%</b><span class="d up">+9 poin</span>
+                </div>
+                <div class="st">
+                  <small>Ketepatan tiba</small><b>95,8%</b><span class="d up">target ≥ 95%</span>
+                </div>
+              </div>
+              <div class="card mt">
+                <div class="row">
+                  <b style="font-size: 13px; color: var(--navy-d)">Perjalanan per minggu</b
+                  ><span class="small">Flex vs Reguler</span>
+                </div>
+                <div class="chart" id="hrChart"></div>
+                <div class="lg">
+                  <span><i style="background: var(--orange)"></i>Flex</span
+                  ><span><i style="background: var(--navy)"></i>Reguler</span>
+                </div>
+              </div>
+              <div class="card mt">
+                <b style="font-size: 13px; color: var(--navy-d)">Rute utama</b>
+                <table class="tbl">
+                  <tr>
+                    <th>Rute</th>
+                    <th>Karyawan</th>
+                    <th>Flex</th>
+                    <th>Tepat waktu</th>
+                  </tr>
+                  <tr>
+                    <td><b>Bogor → Sudirman</b></td>
+                    <td>72</td>
+                    <td>68%</td>
+                    <td>96%</td>
+                  </tr>
+                  <tr>
+                    <td><b>Bekasi → Sudirman</b></td>
+                    <td>51</td>
+                    <td>59%</td>
+                    <td>94%</td>
+                  </tr>
+                  <tr>
+                    <td><b>Serpong → Karet</b></td>
+                    <td>38</td>
+                    <td>66%</td>
+                    <td>97%</td>
+                  </tr>
+                  <tr>
+                    <td><b>Depok → Sudirman</b></td>
+                    <td>25</td>
+                    <td>61%</td>
+                    <td>95%</td>
+                  </tr>
+                </table>
+              </div>
+              <div class="card mt">
+                <div class="row">
+                  <div>
+                    <b style="font-size: 13px; color: var(--navy-d)">Laporan keberlanjutan</b>
+                    <div class="small">Estimasi emisi perjalanan karyawan (Scope 3)</div>
+                  </div>
+                  <span class="chip g">−3,1 ton CO₂</span>
+                </div>
+                <button class="btn s mt" onclick="toast('Laporan PDF November 2026 disiapkan (simulasi).')">
+                  Unduh laporan bulanan
+                </button>
+              </div>
+              <div class="card mt">
+                <b style="font-size: 13px; color: var(--navy-d)">Pengaturan paket</b>
+                <div class="row small" style="margin-top: 8px">
+                  <span>Porsi ditanggung kantor</span><b style="color: var(--navy-d)" data-bind="share"></b>
+                </div>
+                <div class="row small" style="margin-top: 4px">
+                  <span>Paket aktif</span><b style="color: var(--navy-d)">Flex · Hybrid · Reguler</b>
+                </div>
+                <div class="row small" style="margin-top: 4px">
+                  <span>Domain email terdaftar</span><b style="color: var(--navy-d)">@majusejahtera.co.id</b>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <nav class="nav">
+          <button class="on" data-t="home" onclick="go('home')">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" /></svg
+            >Beranda
+          </button>
+          <button data-t="tiket" onclick="go('tiket')">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            >
+              <path
+                d="M3 8a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-2a2 2 0 0 0 0-4z"
+              />
+              <path d="M14 6v12" stroke-dasharray="2 2" /></svg
+            >Tiket
+          </button>
+          <button class="mid" data-t="wl" onclick="openWL()">
+            <span class="bubble"
+              ><svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              >
+                <rect x="3" y="7" width="18" height="10" rx="3" />
+                <path d="M3 12h18M7 17v2M17 17v2" /></svg></span
+            >WorkLink
+          </button>
+          <button data-t="notif" onclick="go('notif')">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            >
+              <path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8" />
+              <path d="M10 20a2 2 0 0 0 4 0" /></svg
+            >Notifikasi
+          </button>
+          <button data-t="akun" onclick="go('akun')">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            >
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 21a8 8 0 0 1 16 0" /></svg
+            >Akun
+          </button>
+        </nav>
+
+        <div class="sheet-bg" id="sheetBg" onclick="if (event.target === this) closeSheet();">
+          <div class="sheet" id="sheet"></div>
+        </div>
+        <div class="toast" id="toast"></div>
+      </div>
     </div>
 
-    <nav class="nav">
-      <button class="on" data-t="home" onclick="go('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Beranda</button>
-      <button data-t="tiket" onclick="go('tiket')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 8a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-2a2 2 0 0 0 0-4z"/><path d="M14 6v12" stroke-dasharray="2 2"/></svg>Tiket</button>
-      <button class="mid" data-t="wl" onclick="openWL()"><span class="bubble"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="7" width="18" height="10" rx="3"/><path d="M3 12h18M7 17v2M17 17v2"/></svg></span>WorkLink</button>
-      <button data-t="notif" onclick="go('notif')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>Notifikasi</button>
-      <button data-t="akun" onclick="go('akun')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Akun</button>
-    </nav>
-
-    <div class="sheet-bg" id="sheetBg" onclick="if(event.target===this)closeSheet()"><div class="sheet" id="sheet"></div></div>
-    <div class="toast" id="toast"></div>
-  </div>
-</div>
-
-<script>
-const $=id=>document.getElementById(id);
-let activated=false, wlMode='emp', simState=0, delayed=false, stars=0;
-
-/* ---------- navigation ---------- */
-const tabFor={home:'home',tiket:'tiket',notif:'notif',akun:'akun','wl':'wl','wl-onb':'wl','wl-trip':'wl','wl-qr':'wl','wl-hist':'wl','wl-rate':'wl',hr:'wl'};
-function go(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
-  const el=$('s-'+id); el.classList.add('on'); el.scrollTop=0;
-  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===tabFor[id]));
-}
-function openWL(){ if(!activated){go('wl-onb')} else {go(wlMode==='hr'?'hr':'wl')} }
-function mode(m){wlMode=m;go(m==='hr'?'hr':'wl')}
-
-/* ---------- toast & sheet ---------- */
-let tt;function toast(msg){const t=$('toast');t.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ED6B23" stroke-width="2.4" stroke-linecap="round"><path d="M5 12l5 5 9-10"/></svg>'+msg;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2600)}
-const S={
-  cari:['Cari','Cari stasiun, kereta, atau fitur. Contoh: "Sudirman", "WorkLink", "Taksaka".'],
-  antarkota:['Kereta Antar Kota','Fitur yang sudah ada di Access by KAI: pesan tiket kereta jarak jauh, pilih kursi, connecting train, transfer tiket, dan registrasi face recognition boarding.'],
-  lokal:['Kereta Lokal','Fitur yang sudah ada: pemesanan tiket kereta lokal dan jadwal perjalanan.'],
-  commuter:['Commuter Line','Fitur yang sudah ada: beli tiket Commuter Line dan tampilkan QR untuk masuk gerbang. Dengan WorkLink, tiket perjalanan kerja otomatis ditagihkan ke kantor.<br><br><button class="btn p" onclick="closeSheet();openWL()">Buka WorkLink</button>'],
-  commuterqr:['Tiket Commuter Line','Bogor → Sudirman · Hari ini · Ditanggung WorkLink.<br>Tunjukkan QR di gerbang tap stasiun.<br><svg viewBox="0 0 29 29" width="160" height="160" style="display:block;margin:12px auto" id="qrSmall" shape-rendering="crispEdges"></svg>'],
-  bandara:['KA Bandara','Fitur yang sudah ada: tiket kereta bandara Soekarno-Hatta dan bandara lain.'],
-  tracking:['Live Tracking','Fitur yang sudah ada: melihat posisi kereta secara real time setelah berangkat. WorkLink memakai data yang sama untuk menyiapkan shuttle sebelum kereta tiba.'],
-  planner:['Trip Planner','Fitur yang sudah ada: merencanakan perjalanan wisata beserta akomodasinya.'],
-  hotel:['Hotel','Fitur yang sudah ada: reservasi hotel langsung dari aplikasi.'],
-  porter:['E-Porter','Fitur yang sudah ada: pesan jasa porter untuk membawa barang di stasiun.'],
-  ppob:['Pulsa & Tagihan','Fitur yang sudah ada: pembelian pulsa, paket data, dan token listrik.'],
-  railpoint:['RailPoint','Fitur yang sudah ada: kumpulkan poin dari pembelian tiket, tukar dengan tiket atau di merchant mitra KAI. Usulan WorkLink: bonus RailPoint untuk perjalanan di luar jam sibuk.'],
-  karbon:['Jejak Karbon','Fitur yang sudah ada: estimasi emisi tiap perjalanan kereta dibanding kendaraan pribadi. WorkLink mengubah data ini menjadi laporan emisi bulanan untuk perusahaan.<div class="kv"><div>Bulan ini<b>−18 kg CO₂</b></div><div>Setara<b>≈ 1 pohon/bulan</b></div></div>'],
-  bantuan:['Bantuan WorkLink','• Shuttle tidak datang: armada cadangan dikirim otomatis bila tunggu lebih dari 10 menit.<br>• KRL terlambat: shuttle menunggu sesuai posisi kereta.<br>• Keluhan ditindaklanjuti maksimal 1 × 24 jam.<br><br><button class="btn p" onclick="closeSheet();toast(\'Tiket bantuan dibuat (simulasi).\')">Laporkan masalah</button>'],
-};
-function sheet(k){const [h,p]=S[k];$('sheet').innerHTML='<div class="grab"></div><h3>'+h+'</h3><p>'+p+'</p>';$('sheetBg').classList.add('on');if(k==='commuterqr')drawQR('qrSmall',7)}
-function closeSheet(){$('sheetBg').classList.remove('on')}
-
-/* ---------- onboarding ---------- */
-function onbGo(n){[1,2,3].forEach(i=>{$('onb'+i).style.display=i===n?'block':'none';$('st'+i).classList.toggle('on',i<=n)});$('onbStep').textContent=n;$('s-wl-onb').scrollTop=0}
-function toggleEmail(){const b=$('emailBox');b.style.display=b.style.display==='none'?'block':'none'}
-function checkEmail(){
-  const v=$('email').value.trim().toLowerCase();const e=$('codeErr');
-  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){e.textContent='Masukkan email kerja yang valid, misalnya nama@kantor.co.id.';e.style.display='block';return}
-  if(!v.endsWith('@majusejahtera.co.id')){e.textContent='Domain email belum terdaftar di WorkLink. Minta HR mendaftarkan kantormu, atau untuk demo gunakan @majusejahtera.co.id.';e.style.display='block';return}
-  e.style.display='none';$('workEmail').textContent=v;$('emailBox').style.display='none';toast('Email cocok dengan PT Maju Sejahtera');
-}
-$('email').addEventListener('input',()=>{$('codeErr').style.display='none'});
-function pick(el){
-  let sib=el; while(sib.previousElementSibling&&sib.previousElementSibling.classList.contains('opt'))sib=sib.previousElementSibling;
-  while(sib&&sib.classList.contains('opt')){sib.classList.remove('on');sib=sib.nextElementSibling}
-  el.classList.add('on')}
-function finishOnb(){
-  if(!$('consent').checked){$('consErr').style.display='block';return}
-  activated=true;$('akunWL').textContent='Aktif';$('akunWLdesc').textContent='PT Maju Sejahtera · Paket Flex · Bogor → Sudirman (Bay B2).';
-  go('wl');toast('WorkLink aktif. Selamat bekerja tanpa ribet!');
-  addNotif('ok','WorkLink aktif','Akunmu terhubung ke PT Maju Sejahtera. Rute: '+$('from').value+' → '+$('to').value+'.','Baru saja');
-}
-
-/* ---------- journey simulation ---------- */
-const steps=[
-  ['Tap-in Commuter Line','06.15','Tap-in di Stasiun Bogor. Biaya KRL tercatat sesuai tarif resmi.'],
-  ['Di dalam KRL','06.16–07.02','Posisi kereta dipantau. Perkiraan tiba Sudirman 07.02.'],
-  ['Shuttle siap di Bay B2','07.05','Shuttle siaga 5 menit sebelum kereta tiba. Scan QR saat naik.'],
-  ['Menuju kantor','07.05–07.25','Shuttle WL-07 menuju Menara Sudirman.'],
-  ['Tiba di kantor','07.25','Perjalanan selesai, tagihan otomatis ke kantor.'],
-];
-function renderTL(){
-  $('timeline').innerHTML=steps.map((s,i)=>{const st=i<simState?'done':(i===simState?'now':'wait');
-    let tm=s[1]; if(delayed&&i>=1){tm={1:'06.16–07.06',2:'07.09',3:'07.09–07.29',4:'07.29'}[i]||tm}
-    return `<div class="it ${st}"><div class="nd">${i<simState?'✓':i+1}</div><div class="bd"><span class="tm">${tm}</span><b>${s[0]}</b><p>${s[2]}</p></div></div>`}).join('');
-  const pct=[0,.25,.52,.75,1][Math.min(simState,4)];
-  const path=$('prog');const L=path.getTotalLength();path.setAttribute('stroke-dasharray',L);path.setAttribute('stroke-dashoffset',L*(1-pct));
-  const p=path.getPointAtLength(L*pct);$('mover').setAttribute('cx',p.x);$('mover').setAttribute('cy',p.y);
-  const labels=['Simulasikan: tap-in di Bogor','Simulasikan: KRL tiba di Sudirman','Simulasikan: naik shuttle (scan QR)','Simulasikan: tiba di kantor','Beri ulasan perjalanan'];
-  $('simBtn').textContent=labels[Math.min(simState,4)];
-  if(simState>=2){$('seatbar').style.width='43%';$('seattxt').textContent='8 dari 14 kursi tersedia · kamu sudah terdaftar'}
-}
-function simStep(){
-  if(simState>=4){go('wl-rate');return}
-  if(simState===2){go('wl-qr');return}
-  simState++;renderTL();
-  if(simState===1){toast('Tap-in tercatat 06.15 · harga Flex berlaku');addNotif('info','Tap-in tercatat','Bogor 06.15 · perjalanan ini memakai harga Flex Rp7.500.','06.15')}
-  if(simState===2){toast('Shuttle WL-07 siap di Bay B2');addNotif('bus','Shuttle siap di Bay B2','WL-07 (B 7204 KAI) menunggu. Scan QR saat naik.','07.00')}
-  if(simState===4){toast('Tiba 07.25. Terima kasih!');addHist()}
-}
-function simDelay(){
-  if(delayed){toast('Simulasi keterlambatan sudah aktif');return}
-  delayed=true;$('kvDep').textContent='07.09';$('kvArr').textContent='07.29';
-  $('tripAlert').innerHTML='<div class="alert o"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><div><b>KRL terlambat 4 menit.</b> Shuttle WL-07 tetap menunggu sesuai posisi kereta. Perkiraan tiba kantor 07.29.</div></div>';
-  addNotif('warn','KRL terlambat 4 menit','Shuttle tetap menunggu di Bay B2. Kamu tidak perlu khawatir tertinggal.','06.48');
-  renderTL();
-}
-function scanDone(){
-  if(simState<2){simState=2}
-  simState=3;renderTL();go('wl-trip');toast('QR dipindai · Rp7.500 (Flex) ditagihkan ke kantor');
-}
-
-/* ---------- QR ---------- */
-let seed=7;function rnd(){seed=(seed*9301+49297)%233280;return seed/233280}
-function drawQR(id,s){seed=s;const N=29;let h='<rect width="29" height="29" fill="#fff"/>';
-  const finder=(x,y)=>`<rect x="${x}" y="${y}" width="7" height="7" fill="#1E1C4D"/><rect x="${x+1}" y="${y+1}" width="5" height="5" fill="#fff"/><rect x="${x+2}" y="${y+2}" width="3" height="3" fill="#1E1C4D"/>`;
-  for(let y=0;y<N;y++)for(let x=0;x<N;x++){const inF=(x<8&&y<8)||(x>20&&y<8)||(x<8&&y>20);if(!inF&&rnd()>.52)h+=`<rect x="${x}" y="${y}" width="1" height="1" fill="#1E1C4D"/>`}
-  h+=finder(0,0)+finder(22,0)+finder(0,22)+`<rect x="11.5" y="11.5" width="6" height="6" rx="1.2" fill="#ED6B23"/><rect x="13" y="13" width="3" height="3" fill="#fff"/>`;
-  const el=$(id);if(el)el.innerHTML=h}
-let qs=30,qseed=3;setInterval(()=>{qs--;if(qs<=0){qs=30;qseed++;drawQR('qr',qseed)}const t=$('qrT');if(t)t.textContent=qs},1000);
-
-/* ---------- notifications ---------- */
-const notifs=[
-  ['bus','Shuttle siap di Bay B2','Kemarin · WL-07 menunggu 5 menit sebelum KRL tiba.','Kemarin'],
-  ['info','Laporan Oktober tersedia','14 perjalanan Flex, hemat 16 kg CO₂.','1 Nov'],
-];
-const nIco={bus:['var(--orange-l)','#ED6B23','<rect x="3" y="5" width="18" height="12" rx="3"/><path d="M3 11h18M7 17v2M17 17v2"/>'],info:['var(--navy-l)','#2D2A70','<circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/>'],warn:['var(--red-l)','#D62839','<path d="M12 3l10 18H2z"/><path d="M12 10v4M12 17h.01"/>'],ok:['var(--green-l)','#1E8E4E','<path d="M5 12l5 5 9-10"/>']};
-function renderNotif(){$('notifList').innerHTML=notifs.map((n,i)=>{const c=nIco[n[0]];return `<div class="notif ${i<1?'un':''}"><div class="ni" style="background:${c[0]}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${c[1]}" stroke-width="2" stroke-linecap="round">${c[2]}</svg></div><div class="nb"><b>${n[1]}</b>${n[2]}</div><div class="nt">${n[3]}</div></div>`}).join('')}
-function addNotif(t,a,b,c){notifs.unshift([t,a,b,c]);renderNotif()}
-
-/* ---------- history ---------- */
-const hist=[['Kam, 5 Nov','Bogor → Menara Sudirman','FLEX','Rp7.500'],['Rab, 4 Nov','Bogor → Menara Sudirman','FLEX','Rp7.500'],['Sel, 3 Nov','Bogor → Menara Sudirman','REGULER','Rp10.000'],['Sen, 2 Nov','Bogor → Menara Sudirman','FLEX','Rp7.500']];
-function renderHist(){$('histList').innerHTML=hist.map(h=>`<div class="trip"><div class="t"><b style="font-size:12px">${h[0].split(', ')[1]}</b><small>${h[0].split(', ')[0]}</small></div><div class="mid"><b>${h[1]}</b>KRL + shuttle · tepat waktu</div><div class="pr"><span class="${h[2]==='FLEX'?'badge-flex':'badge-reg'}">${h[2]}</span><b>${h[3]}</b></div></div>`).join('')}
-function addHist(){hist.unshift(['Hari ini, 8 Nov','Bogor → Menara Sudirman','FLEX','Rp7.500'].map((x,i)=>i===0?'Min, 8 Nov':x));renderHist()}
-
-/* ---------- rating ---------- */
-const starSVG='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9.9-5 4.8 1.2 6.9L12 17.6 5.9 20.9 7.1 14 2 9.2l6.9-.9z"/></svg>';
-function renderStars(){$('stars').innerHTML=[1,2,3,4,5].map(i=>`<button class="${i<=stars?'on':''}" onclick="stars=${i};renderStars();$('rateErr').style.display='none'" aria-label="${i} bintang">${starSVG}</button>`).join('')}
-$('tags').innerHTML=['Tepat waktu','Pengemudi ramah','Bersih','AC dingin','Kursi cukup','Terlambat'].map(t=>`<button onclick="this.classList.toggle('on')">${t}</button>`).join('');
-function sendRate(){if(!stars){$('rateErr').style.display='block';return}simState=0;delayed=false;$('tripAlert').innerHTML='';$('kvDep').textContent='07.05';$('kvArr').textContent='07.25';renderTL();stars=0;renderStars();go('wl');toast('Terima kasih! Ulasan membantu operator menjaga kualitas.')}
-
-/* ---------- HR chart ---------- */
-const wk=[['M1',410,300],['M2',440,282],['M3',486,250],['M4',522,214]];const mx=Math.max(...wk.map(w=>w[1]+w[2]));
-$('hrChart').innerHTML=wk.map(w=>`<div class="c"><b style="font-size:10px;color:var(--navy-d)">${w[1]+w[2]}</b><div class="stack"><span style="height:${w[1]/mx*100}%;background:var(--orange)"></span><span style="height:${w[2]/mx*100}%;background:var(--navy)"></span></div>${w[0]}</div>`).join('');
-
-/* ---------- clock & greeting ---------- */
-function tick(){const d=new Date();const h=d.getHours(),m=d.getMinutes();$('clock').textContent=String(h).padStart(2,'0')+'.'+String(m).padStart(2,'0');
-  $('greet').textContent=(h<11?'Selamat pagi,':h<15?'Selamat siang,':h<19?'Selamat sore,':'Selamat malam,');
-  const mins=h*60+m;const peak=(mins>=390&&mins<510)||(mins>=990&&mins<1110);
-  $('peakStatus').textContent=peak?'Jam sibuk':'Di luar jam sibuk';$('peakBadge').textContent=peak?'HARGA REGULER':'HARGA FLEX';$('peakBadge').className=peak?'badge-reg':'badge-flex';
-  $('peakHint').textContent=peak?'Jam sibuk sedang berlangsung · berangkat setelah '+(mins<510?'08.30':'18.30')+' untuk harga Flex':(mins<390?'Berangkat sebelum 06.30 untuk tetap dapat harga Flex · sisa '+(390-mins)+' menit':'Harga Flex berlaku untuk perjalanan saat ini');
-}
-tick();setInterval(tick,30000);
-renderTL();renderNotif();renderHist();renderStars();drawQR('qr',3);
-const _h=location.hash.slice(1);if(_h){document.body.insertAdjacentHTML('beforeend','<style>.screen.on{animation:none}</style>');activated=true;if(_h==='hr')wlMode='hr';go(_h)}
-</script>
-</body>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/state.js"></script>
+    <script src="assets/js/ui.js"></script>
+    <script src="assets/js/onboarding.js"></script>
+    <script src="assets/js/journey.js"></script>
+    <script src="assets/js/qr.js"></script>
+    <script src="assets/js/notifications.js"></script>
+    <script src="assets/js/history.js"></script>
+    <script src="assets/js/rating.js"></script>
+    <script src="assets/js/hr.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
 </html>
